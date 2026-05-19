@@ -1497,6 +1497,92 @@ body {
       font-weight:800;
       text-align:left;
     }
+    /* ================= MOBILE MENU ================= */
+
+.mobile-menu{
+  display:none;
+}
+
+.overlay{
+  display:none;
+}
+
+@media (max-width:920px){
+
+  body{
+    overflow-x:hidden !important;
+  }
+
+  .mobile-menu{
+    display:flex !important;
+    position:fixed;
+    top:16px;
+    right:16px;
+    width:56px;
+    height:56px;
+    border:none;
+    border-radius:18px;
+    background:#118a43;
+    color:#fff;
+    font-size:30px;
+    align-items:center;
+    justify-content:center;
+    z-index:99999;
+    box-shadow:0 10px 25px rgba(0,0,0,.18);
+  }
+
+  .sidebar{
+    position:fixed !important;
+    top:0 !important;
+    right:-300px !important;
+    width:280px !important;
+    height:100vh !important;
+    z-index:99998 !important;
+    transition:.3s ease !important;
+  }
+
+  .sidebar.active{
+    right:0 !important;
+  }
+
+  .overlay.show{
+    display:block !important;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:99997;
+  }
+
+  .layout{
+    display:block !important;
+  }
+
+  .main{
+    width:100% !important;
+    max-width:100% !important;
+    padding:90px 14px 24px !important;
+    overflow-x:hidden !important;
+  }
+
+  .stats-grid,
+  .report-stats-grid,
+  .filters,
+  .form-grid,
+  .status-row{
+    grid-template-columns:1fr !important;
+  }
+
+  .table-wrap,
+  .report-preview{
+    overflow-x:auto !important;
+    width:100% !important;
+  }
+
+  .reports-table{
+    min-width:720px !important;
+  }
+
+}
 
   </style>
   <link rel="stylesheet" href="responsive.css">
