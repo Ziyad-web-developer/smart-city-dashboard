@@ -49,24 +49,25 @@ if (!form || !loginInput || !passwordInput || !rememberCheckbox || !submitButton
   }
 
   function togglePassword() {
+    const passwordInput = document.getElementById("password");
     const icon = document.getElementById("eyeIcon");
-
+  
+    if (!passwordInput || !icon) return;
+  
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
-      if (icon) {
-        icon.innerHTML = `
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
-          <circle cx="12" cy="12" r="3"/>
-        `;
-      }
+  
+      icon.innerHTML = `
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      `;
     } else {
       passwordInput.type = "password";
-      if (icon) {
-        icon.innerHTML = `
-          <path d="M17.94 17.94A10.94 10.94 0 0112 20C5 20 1 12 1 12a21.8 21.8 0 015.06-6.94"/>
-          <line x1="1" y1="1" x2="23" y2="23"/>
-        `;
-      }
+  
+      icon.innerHTML = `
+        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.8 21.8 0 0 1 5.06-6.94"></path>
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+      `;
     }
   }
 
