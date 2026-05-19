@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الخريطة التفاعلية | القطاع البلدي</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap"
+    rel="stylesheet"
+  />
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Tajawal", sans-serif;
+    }
+
+    body {
+      background: #f4f8f5;
+      color: #1f2937;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 280px;
+      background:linear-gradient(180deg, #159447 0%, #0f7d3c 100%);
+      color: #fff;
+      padding: 24px 18px;
+      box-shadow: 4px 0 18px rgba(0, 0, 0, 0.08);
+      gap: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .brand-text h1 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .brand-text p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .user-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(6px);
+    }
+
+    .label {
+      font-size: 12px;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    #welcomeName {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    #userRoleText {
+      font-size: 13px;
+      line-height: 1.8;
+      opacity: 0.95;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: 0.25s ease;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateX(-3px);
+    }
+
+    .nav-item.active {
+      background: #ffffff;
+      color: #0f6d46;
+      font-weight: 800;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon {
+      display: none;
+    }
+
+    .nav-item.active .icon {
+      background: #e7f6ee;
+    }
+    html {
+  scroll-behavior: smooth;
+}
+    .logout-btn {
+      width: 100%;
+      margin-top: 28px;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #0f6d46;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .main {
+      flex: 1;
+      padding: 26px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .topbar-left h1 {
+      font-size: 30px;
+      color: #0f6d46;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .topbar-left p {
+      color: #6b7280;
+      font-size: 15px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .top-pill {
+      background: #ffffff;
+      border: 1px solid #dbe7de;
+      color: #355047;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 6px 16px rgba(15, 109, 70, 0.06);
+    }
+
+    .top-pill.primary {
+      background: #0f6d46;
+      color: #ffffff;
+      border-color: #0f6d46;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 18px;
+      border: 1px solid #e3ece6;
+      box-shadow: 0 10px 24px rgba(15, 109, 70, 0.06);
+    }
+
+    .stat-card h3 {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 800;
+      color: #0f6d46;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 20px;
+      border: 1px solid #e3ece6;
+      box-shadow: 0 12px 28px rgba(15, 109, 70, 0.06);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .card-header h2 {
+      font-size: 22px;
+      color: #18342c;
+      font-weight: 800;
+    }
+
+    .card-header p {
+      color: #6b7280;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .select-control,
+    .refresh-btn {
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid #dbe7de;
+      background: #fff;
+      padding: 0 14px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .refresh-btn {
+      background: #0f6d46;
+      color: #fff;
+      border-color: #0f6d46;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #map {
+      width: 100%;
+      height: 620px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #dfe8e2;
+    }
+
+    .side-panel h3 {
+      font-size: 20px;
+      color: #18342c;
+      margin-bottom: 14px;
+      font-weight: 800;
+    }
+
+    .legend-item,
+    .report-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .legend-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .red {
+      background: #dc2626;
+    }
+
+    .orange {
+      background: #f59e0b;
+    }
+
+    .green {
+      background: #0f6d46;
+    }
+
+    .gray {
+      background: #6b7280;
+    }
+
+    .report-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-left: 4px;
+    }
+
+    .report-item {
+      padding: 12px;
+      border-radius: 16px;
+      background: #f8fbf9;
+      border: 1px solid #e5eee8;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .report-item:hover {
+      background: #eef8f2;
+    }
+
+    .report-item-text {
+      flex: 1;
+    }
+
+    .report-item-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #18342c;
+      margin-bottom: 6px;
+    }
+
+    .report-item-sub {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.7;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+      font-size: 15px;
+    }
+
+    .leaflet-popup-content {
+      font-family: "Tajawal", sans-serif;
+      line-height: 1.9;
+      min-width: 220px;
+    }
+
+    .popup-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f6d46;
+      margin-bottom: 8px;
+    }
+
+    .popup-row {
+      margin-bottom: 4px;
+      color: #374151;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1200px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      #map {
+        height: 450px;
+      }
+    }
+  
+
+    /* ===== Balady matching sidebar + fixed header adjustments ===== */
+    html, body { min-height: 100%; overflow-x: hidden; }
+    .layout{
+      display:grid !important;
+      grid-template-columns:290px minmax(0, 1fr) !important;
+      min-height:100vh !important;
+      align-items:stretch;
+    }
+    .sidebar{
+      width:auto !important;
+      min-height:100vh !important;
+      height:100vh !important;
+      position:sticky !important;
+      top:0 !important;
+      display:flex !important;
+      flex-direction:column !important;
+      gap:14px !important;
+      padding:24px 18px !important;
+      box-shadow:none !important;
+    }
+    .brand{ margin-bottom:6px !important; }
+    .brand-logo{
+      width:52px !important;
+      height:52px !important;
+      border-radius:16px !important;
+      background:rgba(255,255,255,.16) !important;
+      border:1px solid rgba(255,255,255,.14) !important;
+      backdrop-filter:blur(4px);
+      font-size:24px !important;
+      font-weight:800;
+    }
+    .brand-logo::before{ content:"ب"; }
+    .user-card{
+      border-radius:22px !important;
+      padding:18px !important;
+      margin-bottom:4px !important;
+      background:rgba(255,255,255,.12) !important;
+    }
+    #welcomeName{ font-size:22px !important; }
+    .nav{ gap:10px !important; margin-top:4px; }
+    .nav-item{
+      display:block !important;
+      padding:12px 14px !important;
+      border-radius:16px !important;
+      background:rgba(255,255,255,.10) !important;
+      border:1px solid rgba(255,255,255,.10) !important;
+      font-size:15px;
+      font-weight:700;
+      transform:none !important;
+    }
+    .nav-item:hover{ background:rgba(255,255,255,.16) !important; transform:none !important; }
+    .nav-item.active{ background:#fff !important; color:#0d6f36 !important; border-color:#fff !important; box-shadow:none !important; }
+    .logout-btn{ margin-top:auto !important; border-radius:18px !important; padding:15px 16px !important; }
+    .main{
+      min-width:0;
+      padding:26px !important;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .page-container{
+      width:100%;
+      max-width:1180px;
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .welcome-header{
+      background:#ffffff;
+      border:1px solid #e3ece6;
+      border-radius:26px;
+      padding:20px 24px;
+      box-shadow:0 10px 30px rgba(15, 23, 42, 0.06);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      position:sticky;
+      top:0;
+      z-index:50;
+    }
+    .welcome-header .small{ color:#6b7c71; font-size:14px; font-weight:700; margin-bottom:4px; }
+    .welcome-header h2{ color:#0d6f36; font-size:28px; font-weight:800; }
+    .welcome-header .pill{ background:#e8f7ee; color:#0d6f36; border:1px solid #cce8d5; border-radius:999px; padding:10px 15px; font-size:13px; font-weight:800; white-space:nowrap; }
+    .topbar{ margin-bottom:0 !important; }
+    .content-grid{ grid-template-columns:minmax(0, 1fr) 320px !important; }
+    #map{ height:560px !important; }
+    .report-item-sub{ direction:rtl; }
+    @media (max-width:1200px){ .content-grid{ grid-template-columns:1fr !important; } }
+    @media (max-width:900px){
+      .layout{ grid-template-columns:1fr !important; }
+      .sidebar{ position:relative !important; height:auto !important; min-height:auto !important; }
+      .page-container{ max-width:100%; }
+    }
+
+
+    /* ===== Final sidebar/header fixes ===== */
+    .layout{
+      display:grid !important;
+      grid-template-columns:290px minmax(0, 1fr) !important;
+      min-height:100vh !important;
+      align-items:stretch !important;
+    }
+
+    .sidebar{
+      width:auto !important;
+      min-height:100vh !important;
+      height:auto !important;
+      position:sticky !important;
+      top:0 !important;
+      align-self:start !important;
+      display:flex !important;
+      flex-direction:column !important;
+      gap:14px !important;
+      padding:24px 18px !important;
+    }
+
+    .brand{ margin-bottom:12px !important; }
+    .nav{ margin-top:8px !important; }
+    .logout-btn{ margin-top:auto !important; }
+    .main{ margin-right:0 !important; min-width:0 !important; }
+    .welcome-header{ justify-content:flex-start !important; }
+    .topbar-left h1{ display:none !important; }
+
+    @media (max-width:900px){
+      .layout{ grid-template-columns:1fr !important; }
+      .sidebar{
+        position:relative !important;
+        min-height:auto !important;
+        height:auto !important;
+      }
+      .main{ margin-right:0 !important; }
+    }
+
+  
+    /* ===== Sidebar copied from balady + final map page fixes ===== */
+    html, body{
+      min-height:100%;
+      width:100%;
+      overflow-x:hidden !important;
+    }
+
+    .layout{
+      display:grid !important;
+      grid-template-columns:250px minmax(0,1fr) !important;
+      min-height:100vh !important;
+      width:100% !important;
+      max-width:100% !important;
+      overflow:visible !important;
+      align-items:stretch !important;
+    }
+
+    .sidebar{
+      background:linear-gradient(180deg, #159447 0%, #0f7d3c 100%) !important;
+      color:#fff !important;
+      padding:20px 14px !important;
+      display:flex !important;
+      flex-direction:column !important;
+      gap:12px !important;
+      position:fixed !important;
+      top:0 !important;
+      right:0 !important;
+      bottom:0 !important;
+      width:250px !important;
+      height:100vh !important;
+      min-height:100vh !important;
+      overflow-y:auto !important;
+      z-index:90 !important;
+      box-shadow:none !important;
+    }
+
+    .brand{
+      display:flex !important;
+      align-items:center !important;
+      gap:12px !important;
+      margin-bottom:6px !important;
+    }
+
+    .brand-mark{
+      width:52px !important;
+      height:52px !important;
+      border-radius:16px !important;
+      background:rgba(255,255,255,.16) !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      font-size:24px !important;
+      font-weight:800 !important;
+      border:1px solid rgba(255,255,255,.14) !important;
+      backdrop-filter:blur(4px);
+    }
+
+    .brand-text h1{
+      font-size:22px !important;
+      font-weight:800 !important;
+      line-height:1.25 !important;
+      margin:0 !important;
+    }
+
+    .brand-text p{
+      font-size:13px !important;
+      opacity:.9 !important;
+      margin-top:4px !important;
+    }
+
+    .user-card,
+    #welcomeName,
+    #userRoleText{
+      display:none !important;
+    }
+
+    .nav{
+      display:flex !important;
+      flex-direction:column !important;
+      gap:10px !important;
+      margin-top:4px !important;
+    }
+
+    .nav-item{
+      display:block !important;
+      padding:12px 14px !important;
+      border-radius:16px !important;
+      background:rgba(255,255,255,.10) !important;
+      border:1px solid rgba(255,255,255,.10) !important;
+      font-size:15px !important;
+      font-weight:600 !important;
+      cursor:pointer !important;
+      transition:.2s ease !important;
+      transform:none !important;
+      box-shadow:none !important;
+    }
+
+    .nav-item:hover{
+      background:rgba(255,255,255,.16) !important;
+      transform:none !important;
+    }
+
+    .nav-item.active{
+      background:#fff !important;
+      color:#0d6f36 !important;
+      border-color:#fff !important;
+      font-weight:600 !important;
+      box-shadow:none !important;
+    }
+
+    .icon{
+      display:none !important;
+    }
+
+    .logout-btn{
+      width:100% !important;
+      margin-top:auto !important;
+      border:none !important;
+      border-radius:18px !important;
+      padding:15px 16px !important;
+      background:#fff !important;
+      color:#0d6f36 !important;
+      font-size:15px !important;
+      font-weight:800 !important;
+      cursor:pointer !important;
+      transition:.2s ease !important;
+    }
+
+    .logout-btn:hover{
+      transform:none !important;
+    }
+
+    .main{
+      grid-column:2 !important;
+      width:100% !important;
+      max-width:1180px !important;
+      margin:0 auto !important;
+      padding:24px 22px 28px !important;
+      min-width:0 !important;
+      display:flex !important;
+      flex-direction:column !important;
+      gap:18px !important;
+      overflow-x:hidden !important;
+    }
+
+    .page-container{
+      width:100% !important;
+      max-width:100% !important;
+      margin:0 auto !important;
+      display:flex !important;
+      flex-direction:column !important;
+      gap:18px !important;
+    }
+
+    .welcome-header{
+      position:sticky !important;
+      top:0 !important;
+      z-index:50 !important;
+      background:rgba(255,255,255,.94) !important;
+      border:1px solid #e3ebe5 !important;
+      border-radius:26px !important;
+      box-shadow:0 10px 30px rgba(15, 23, 42, 0.06) !important;
+      padding:18px 22px !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:flex-start !important;
+      gap:14px !important;
+      backdrop-filter:blur(8px);
+    }
+
+    .welcome-header .small{
+      color:#6b7c71 !important;
+      font-size:13px !important;
+      font-weight:700 !important;
+      margin-bottom:5px !important;
+    }
+
+    .welcome-header h2{
+      color:#0d6f36 !important;
+      font-size:24px !important;
+      font-weight:800 !important;
+      margin:0 !important;
+    }
+
+    .welcome-header .pill{
+      display:none !important;
+    }
+
+    .topbar-left h1{
+      display:none !important;
+    }
+
+    .topbar{
+      margin-bottom:0 !important;
+    }
+
+    .content-grid{
+      grid-template-columns:minmax(0, 1fr) 320px !important;
+    }
+
+    #map{
+      height:560px !important;
+    }
+
+    @media (max-width:1200px){
+      .content-grid{
+        grid-template-columns:1fr !important;
+      }
+    }
+
+    @media (max-width:920px){
+      .layout{
+        display:block !important;
+        grid-template-columns:1fr !important;
+      }
+
+      .sidebar{
+        position:relative !important;
+        top:auto !important;
+        right:auto !important;
+        bottom:auto !important;
+        width:100% !important;
+        height:auto !important;
+        min-height:auto !important;
+      }
+
+      .main{
+        grid-column:auto !important;
+        max-width:100% !important;
+        padding:18px !important;
+      }
+
+      #map{
+        height:450px !important;
+      }
+    }
+
+  </style>
+  <link rel="stylesheet" href="../responsive.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" type="button" aria-label="فتح القائمة" aria-expanded="false"><span>☰</span></button>
+  <div class="mobile-overlay" aria-hidden="true"></div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">ب</div>
+        <div class="brand-text">
+          <h1>قسم البلاغات</h1>
+          <p>القطاع البلدي</p>
+        </div>
+      </div>
+
+      <div class="nav">
+        <div class="nav-item" onclick="window.location.href='../balady.html'">
+          <span>صندوق البلاغات</span>
+        </div>
+
+        <div class="nav-item" onclick="window.location.href='../balady.html#reportsSection'">
+          <span>إدارة البلاغات</span>
+        </div>
+
+        <div class="nav-item active">
+          <span>الخريطة التفاعلية</span>
+        </div>
+
+        <div class="nav-item" onclick="window.location.href='../balady.html#reportsPage'">
+          <span>التقارير</span>
+        </div>
+
+      </div>
+
+      <button class="logout-btn" id="logoutBtn">تسجيل الخروج</button>
+    </aside>
+
+    <main class="main">
+      <div class="page-container">
+      <header class="welcome-header">
+        <div>
+          <div class="small">مرحبًا بك في لوحة القطاع البلدي</div>
+          <h2 id="headerWelcomeName">جاري التحميل...</h2>
+        </div>
+      </header>
+
+      <div class="topbar">
+        <div class="topbar-left">
+          <p>عرض مواقع البلاغات ومتابعتها بشكل مباشر على الخريطة</p>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="top-pill primary">القطاع البلدي</div>
+          <div class="top-pill" id="todayLabel">اليوم</div>
+        </div>
+      </div>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <h3>إجمالي البلاغات</h3>
+          <div class="stat-number" id="totalReports">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>بلاغات مفتوحة</h3>
+          <div class="stat-number" id="openReports">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>قيد المعالجة</h3>
+          <div class="stat-number" id="progressReports">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>بلاغات مكتملة</h3>
+          <div class="stat-number" id="completedReports">0</div>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>خريطة البلاغات</h2>
+              <p>جميع البلاغات المرتبطة بالمواقع الجغرافية</p>
+            </div>
+
+            <div class="header-actions">
+              <select id="statusFilter" class="select-control">
+                <option value="all">كل الحالات</option>
+                <option value="open">مفتوح</option>
+                <option value="in_progress">قيد المعالجة</option>
+                <option value="completed">مكتمل</option>
+              </select>
+
+              <button id="refreshBtn" class="refresh-btn">تحديث</button>
+            </div>
+          </div>
+
+          <div id="map"></div>
+        </div>
+
+        <div class="card side-panel">
+          <h3>مفتاح الألوان</h3>
+
+          <div class="legend-list">
+            <div class="legend-item">
+              <span class="legend-dot red"></span>
+              <span>بلاغ مفتوح</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot orange"></span>
+              <span>قيد المعالجة</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot green"></span>
+              <span>بلاغ مكتمل</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot gray"></span>
+              <span>حالة غير محددة</span>
+            </div>
+          </div>
+
+          <h3>آخر البلاغات</h3>
+          <div class="report-list" id="reportList">
+            <div class="empty-state">جاري تحميل البلاغات...</div>
+          </div>
+        </div>
+      </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script type="module">
+    import { db, auth } from "./api.js";
+    import {
+      collection,
+      getDocs,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const headerWelcomeName = document.getElementById("headerWelcomeName");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const savedUser =
+      localStorage.getItem("portalUser") ||
+      sessionStorage.getItem("portalUser");
+
+    if (!savedUser) {
+      window.location.href = "./login.html";
+    }
+
+    let currentUser = null;
+
+    try {
+      currentUser = JSON.parse(savedUser);
+    } catch (e) {
+      window.location.href = "./login.html";
+    }
+
+    const currentRole = currentUser.role || currentUser.user?.role;
+
+    if (!currentUser || !currentUser.isLoggedIn || !currentUser.otpVerified || currentRole !== "balady") {
+      window.location.href = "./login.html";
+    }
+
+    let currentUserName =
+      currentUser.name ||
+      currentUser.displayName ||
+      currentUser.fullName ||
+      currentUser.user?.name ||
+      currentUser.user?.displayName ||
+      currentUser.user?.fullName ||
+      currentUser.user?.display_name ||
+      "المستخدم";
+
+    function setUserName(name) {
+      currentUserName = name || "المستخدم";
+      if (headerWelcomeName) headerWelcomeName.textContent = "مرحبًا، " + currentUserName;
+    }
+
+    async function loadUserNameFromDatabase() {
+      setUserName(currentUserName);
+
+      const userId =
+        currentUser.id ||
+        currentUser.uid ||
+        currentUser.userId ||
+        currentUser.user?.id ||
+        currentUser.user?.uid ||
+        currentUser.user?.userId;
+
+      if (!userId) return;
+
+      try {
+        const userSnap = await getDoc(doc(db, "users", userId));
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          setUserName(
+            data.name ||
+            data.displayName ||
+            data.display_name ||
+            data.fullName ||
+            data.email ||
+            currentUserName
+          );
+        }
+      } catch (error) {
+        console.error("تعذر جلب اسم المستخدم من قاعدة البيانات", error);
+      }
+    }
+
+    loadUserNameFromDatabase();
+
+    const totalReports = document.getElementById("totalReports");
+    const openReports = document.getElementById("openReports");
+    const progressReports = document.getElementById("progressReports");
+    const completedReports = document.getElementById("completedReports");
+
+    const statusFilter = document.getElementById("statusFilter");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const reportList = document.getElementById("reportList");
+    const todayLabel = document.getElementById("todayLabel");
+
+    const today = new Date();
+    todayLabel.textContent = today.toLocaleDateString("ar-SA", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+
+    const map = L.map("map").setView([21.543333, 39.172779], 11);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+      iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+      shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
+    });
+
+    let allReports = [];
+    let markerObjects = [];
+
+    function normalizeStatus(status) {
+      if (!status) return "";
+      const value = String(status).trim().toLowerCase();
+      if (value === "new") return "open";
+      return value;
+    }
+
+    function getStatusLabel(status) {
+      const value = normalizeStatus(status);
+
+      if (value === "open") return "مفتوح";
+      if (value === "in_progress") return "قيد المعالجة";
+      if (value === "completed") return "مكتمل";
+
+      return "غير محددة";
+    }
+
+    function getMarkerColor(status) {
+      const value = normalizeStatus(status);
+
+      if (value === "open") return "#dc2626";
+      if (value === "in_progress") return "#f59e0b";
+      if (value === "completed") return "#0f6d46";
+
+      return "#6b7280";
+    }
+
+    function updateStats(data) {
+      totalReports.textContent = data.length;
+      openReports.textContent = data.filter(r => normalizeStatus(r.status) === "open").length;
+      progressReports.textContent = data.filter(r => normalizeStatus(r.status) === "in_progress").length;
+      completedReports.textContent = data.filter(r => normalizeStatus(r.status) === "completed").length;
+    }
+
+    function renderReportList(data) {
+      if (!data.length) {
+        reportList.innerHTML = `<div class="empty-state">لا توجد بلاغات مطابقة حالياً</div>`;
+        return;
+      }
+
+      reportList.innerHTML = "";
+
+      data.slice(0, 8).forEach((report) => {
+        const item = document.createElement("div");
+        item.className = "report-item";
+
+        const dot = document.createElement("span");
+        dot.className = "legend-dot";
+        dot.style.background = getMarkerColor(report.status);
+
+        const text = document.createElement("div");
+        text.className = "report-item-text";
+        text.innerHTML = `
+          <div class="report-item-title">${report.title || "بدون عنوان"}</div>
+          <div class="report-item-sub">
+            ${report.locationText || "بدون موقع"}<br>
+            الحالة: ${getStatusLabel(report.status)}
+          </div>
+        `;
+
+        item.appendChild(dot);
+        item.appendChild(text);
+
+        item.addEventListener("click", () => {
+          const match = markerObjects.find(m => m.id === report.id);
+          if (match) {
+            map.setView([report.lat, report.lng], 15);
+            match.marker.openPopup();
+          }
+        });
+
+        reportList.appendChild(item);
+      });
+    }
+
+    function renderMap(data) {
+      markersLayer.clearLayers();
+      markerObjects = [];
+
+      if (!data.length) return;
+
+      const bounds = [];
+
+      data.forEach((report) => {
+        if (!Number.isFinite(report.lat) || !Number.isFinite(report.lng)) return;
+
+        const marker = L.marker([report.lat, report.lng]);
+
+        marker.bindPopup(`
+          <div>
+            <div class="popup-title">${report.title || "بدون عنوان"}</div>
+            <div class="popup-row"><strong>الوصف:</strong> ${report.description || "لا يوجد وصف"}</div>
+            <div class="popup-row"><strong>الموقع:</strong> ${report.locationText || "غير محدد"}</div>
+            <div class="popup-row"><strong>الفئة:</strong> ${report.category || "غير محددة"}</div>
+            <div class="popup-row"><strong>الأولوية:</strong> ${report.priority || "عادية"}</div>
+            <div class="popup-row"><strong>الحالة:</strong> ${getStatusLabel(report.status)}</div>
+          </div>
+        `);
+
+        marker.addTo(markersLayer);
+        bounds.push([report.lat, report.lng]);
+        markerObjects.push({ id: report.id, marker });
+      });
+
+      if (bounds.length) {
+        map.fitBounds(bounds, { padding: [30, 30] });
+      }
+    }
+
+    function getFilteredReports() {
+      const statusValue = statusFilter.value;
+
+      return allReports.filter((report) => {
+        const hasCoordinates = Number.isFinite(report.lat) && Number.isFinite(report.lng);
+        const matchesStatus = statusValue === "all" || normalizeStatus(report.status) === statusValue;
+        return hasCoordinates && matchesStatus;
+      });
+    }
+
+    function renderAll() {
+      const filtered = getFilteredReports();
+      updateStats(filtered);
+      renderMap(filtered);
+      renderReportList(filtered);
+    }
+
+    function extractCoordinates(data) {
+      let lat = null;
+      let lng = null;
+      const loc = data.location;
+
+      // Firestore GeoPoint يظهر في Firebase بهذا الشكل: [lat° N, lng° E]
+      if (loc && typeof loc.latitude === "number" && typeof loc.longitude === "number") {
+        lat = loc.latitude;
+        lng = loc.longitude;
+      }
+
+      // دعم لو كان التطبيق يحفظها Array: [lat, lng]
+      else if (Array.isArray(loc) && loc.length >= 2) {
+        lat = parseFloat(loc[0]);
+        lng = parseFloat(loc[1]);
+      }
+
+      // دعم لو كانت محفوظة كحقول منفصلة
+      else if (data.lat !== undefined && data.lng !== undefined) {
+        lat = parseFloat(data.lat);
+        lng = parseFloat(data.lng);
+      }
+
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        return { lat: null, lng: null };
+      }
+
+      return { lat, lng };
+    }
+
+    function formatLocationText(data, lat, lng) {
+      if (data.locationName) return data.locationName;
+      if (data.address) return data.address;
+      if (Number.isFinite(lat) && Number.isFinite(lng)) return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      return "غير محدد";
+    }
+
+    async function loadReports() {
+      try {
+        reportList.innerHTML = `<div class="empty-state">جاري تحميل البلاغات...</div>`;
+
+        const reportsRef = collection(db, "reports");
+        const snapshot = await getDocs(reportsRef);
+
+        allReports = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data();
+          const { lat, lng } = extractCoordinates(data);
+
+          return {
+            id: docSnap.id,
+            ...data,
+            title: data.title || "بدون عنوان",
+            description: data.description || "",
+            category: data.category || "غير محددة",
+            priority: data.priority || "عادية",
+            status: data.status || "open",
+            lat,
+            lng,
+            locationText: formatLocationText(data, lat, lng),
+            createdSort:
+              data.createdAt?.toDate?.().getTime?.() ||
+              data.created_time?.toDate?.().getTime?.() ||
+              data.updatedAt?.toDate?.().getTime?.() ||
+              0
+          };
+        }).sort((a, b) => b.createdSort - a.createdSort);
+
+        console.log("Reports loaded for map:", allReports);
+        renderAll();
+      } catch (error) {
+        console.error("خطأ في تحميل البلاغات:", error);
+        reportList.innerHTML = `<div class="empty-state">تعذر تحميل البلاغات من قاعدة البيانات</div>`;
+      }
+    }
+
+    statusFilter.addEventListener("change", renderAll);
+    refreshBtn.addEventListener("click", loadReports);
+
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        localStorage.removeItem("portalUser");
+        sessionStorage.removeItem("portalUser");
+        localStorage.removeItem("portalPendingAuth");
+        sessionStorage.removeItem("portalPendingAuth");
+        try { await signOut(auth); } catch (_) {}
+        window.location.href = "./login.html";
+      } catch (error) {
+        alert("تعذر تسجيل الخروج");
+        console.error(error);
+      }
+    });
+
+    loadReports();
+  </script>
+
+<script>
+(function(){
+  const btn = document.querySelector('.mobile-menu-btn');
+  const overlay = document.querySelector('.mobile-overlay');
+  const navLinks = document.querySelectorAll('.sidebar a, .sidebar button, .nav-item');
+
+  function closeMenu(){
+    document.body.classList.remove('menu-open');
+    if(btn) btn.setAttribute('aria-expanded','false');
+  }
+
+  if(btn){
+    btn.addEventListener('click', function(){
+      const opened = document.body.classList.toggle('menu-open');
+      btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
+    });
+  }
+
+  if(overlay){
+    overlay.addEventListener('click', closeMenu);
+  }
+
+  navLinks.forEach(function(item){
+    item.addEventListener('click', function(){
+      if(window.innerWidth <= 900) closeMenu();
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>البوابة الموحدة | رمز التحقق</title>
+
+  <link rel="stylesheet" href="login.css">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../responsive.css">
+</head>
+
+<body>
+
+  <div class="page">
+
+    <!-- التحقق -->
+    <section class="left">
+
+      <div class="box">
+
+        <div class="brand">
+          <div class="shield">🛡</div>
+
+          <div>
+            <b>البوابة</b><br>
+            الموحدة
+          </div>
+        </div>
+
+        <h1>التحقق بخطوتين</h1>
+
+        <p class="desc">
+          تم التحقق من بيانات الدخول بنجاح، الرجاء إدخال رمز التحقق للمتابعة إلى لوحة التحكم الخاصة بك.
+        </p>
+
+        <form class="form" id="verifyForm">
+
+          <div class="label">
+            رمز التحقق
+          </div>
+
+          <div class="input">
+            <input id="verifyCode" type="text" placeholder="أدخل 5 ارقام عشوائية للاستمرار" inputmode="numeric">
+          </div>
+
+          <a class="forgot" href="#" id="resendCode">إعادة إرسال الرمز</a>
+
+          <div class="row">
+            <label>
+              <input type="checkbox" checked disabled>
+              التحقق الثنائي مفعل
+            </label>
+          </div>
+
+          <button type="button" onclick="window.verifyCode()">
+            تحقق
+            <div class="arrow-wrapper">
+              <div class="arrow"></div>
+            </div>
+          </button>
+          
+          <div id="msg" style="margin-top:10px; font-size:14px; text-align:center;"></div>
+
+        </form>
+
+        <div class="info">
+          <b>طبقة حماية إضافية</b>
+          <br>
+          يوفر النظام خطوة تحقق إضافية قبل الوصول إلى لوحة التحكم لضمان أمان أعلى للحسابات والصلاحيات.
+        </div>
+
+        <div class="footer">
+          <a href="login.html">العودة لتسجيل الدخول</a>
+          <a href="../contact.html">تواصل معنا</a>
+
+        </div>
+
+       
+
+      </div>
+
+    </section>
+
+    <!-- القسم الأخضر -->
+    <section class="right">
+
+      <div class="hero">
+
+        <h2>
+          المنصة الموحدة لإدارة الخدمات
+        </h2>
+
+        <p>
+          نظام متكامل يجمع بين الرقابة البلدية والخدمات الصحية لتعزيز جودة الحياة في المملكة.
+        </p>
+
+        <div class="chips">
+          <div class="chip">
+            القطاع البلدي
+          </div>
+
+          <div class="chip">
+            القطاع الصحي
+          </div>
+        </div>
+
+      </div>
+
+      <div class="copyright">
+        جميع الحقوق محفوظة © 2026 - البوابة الموحدة
+      </div>
+    </section>
+
+  </div>
+
+  <script src="verify.js"></script>
+</body>
+
+</html>

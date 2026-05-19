@@ -1,0 +1,3399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>صندوق البلاغات | القطاع البلدي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:'Tajawal',sans-serif;
+    }
+
+    :root{
+      --primary:#118a43;
+      --primary-dark:#0d6f36;
+      --primary-soft:#e8f7ee;
+      --bg:#f3f6f5;
+      --card:#ffffff;
+      --text:#162217;
+      --muted:#6b7c71;
+      --line:#e3ebe5;
+      --warning-bg:#fff3d6;
+      --warning-text:#9a6700;
+      --danger-bg:#ffe3e0;
+      --danger-text:#c03221;
+      --success-bg:#e3f7e8;
+      --success-text:#18794e;
+      --blue-bg:#e6f0ff;
+      --blue-text:#2457d6;
+      --shadow:0 10px 30px rgba(15, 23, 42, 0.06);
+      --radius-xl:26px;
+      --radius-lg:20px;
+      --radius-md:16px;
+      --radius-sm:12px;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .layout{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:290px minmax(0, 1fr);
+    }
+
+    .sidebar{
+      background:linear-gradient(180deg, #159447 0%, #0f7d3c 100%);
+      color:#fff;
+      padding:24px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      position:sticky;
+      top:0;
+      height:100vh;
+      gap: 14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:6px;
+    }
+
+    .brand-mark{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      background:rgba(255,255,255,.16);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      font-weight:800;
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(4px);
+    }
+
+    .brand-text h1{
+      font-size:22px;
+      font-weight:800;
+      line-height:1.25;
+    }
+
+    .brand-text p{
+      font-size:13px;
+      opacity:.9;
+      margin-top:4px;
+    }
+
+    .user-card{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:22px;
+      padding:18px;
+    }
+
+    .user-card .label{
+      font-size:13px;
+      opacity:.85;
+      margin-bottom:6px;
+    }
+
+    .user-card h2{
+      font-size:22px;
+      margin-bottom:8px;
+    }
+
+    .user-card p{
+      font-size:14px;
+      line-height:1.8;
+      opacity:.95;
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:4px;
+    }
+
+    .nav-item{
+      display:block;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .nav-item:hover{
+      background:rgba(255,255,255,.16);
+    }
+
+    .nav-item.active{
+      background:#fff;
+      color:var(--primary-dark);
+      border-color:#fff;
+    }
+
+    .nav-item .icon{
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.14);
+      font-size:16px;
+      flex-shrink:0;
+    }
+
+    .nav-item.active .icon{
+      background:var(--primary-soft);
+    }
+
+    .logout-btn{
+      margin-top:auto;
+      border:none;
+      border-radius:18px;
+      padding:15px 16px;
+      background:#fff;
+      color:var(--primary-dark);
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .main{
+      width:100%;
+      max-width:1180px;
+      margin:0 auto;
+      padding:24px 22px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .topbar-left h1{
+      font-size:34px;
+      font-weight:800;
+      margin-bottom:7px;
+    }
+
+    .topbar-left p{
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .topbar-actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .top-pill{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:11px 16px;
+      font-size:14px;
+      font-weight:700;
+      box-shadow:var(--shadow);
+    }
+
+    .top-pill.primary{
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      border-color:#cce8d5;
+    }
+
+
+
+    .welcome-header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:rgba(255,255,255,.94);
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      padding:18px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      backdrop-filter:blur(8px);
+    }
+
+    .welcome-header .welcome-text{
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+    }
+
+    .welcome-header .welcome-text span{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .welcome-header .welcome-text h2{
+      color:var(--primary-dark);
+      font-size:24px;
+      font-weight:800;
+      margin:0;
+    }
+
+    .welcome-header .welcome-badge{
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      border:1px solid #cce8d5;
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:13px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .overview{
+      display:grid;
+      grid-template-columns:1.25fr .95fr;
+      gap:18px;
+    }
+
+    .hero-card,
+    .mini-panel,
+    .stats-card,
+    .panel,
+    .table-wrap{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+    }
+
+    .hero-card{
+      padding:24px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      min-height:230px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card::after{
+      content:"";
+      position:absolute;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:linear-gradient(180deg, rgba(17,138,67,.12), rgba(17,138,67,0));
+      left:-40px;
+      bottom:-120px;
+    }
+
+    .hero-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-head h2{
+      font-size:26px;
+      margin-bottom:8px;
+    }
+
+    .hero-head p{
+      color:var(--muted);
+      line-height:1.9;
+      font-size:15px;
+      max-width:700px;
+    }
+
+    .hero-badge{
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      border:1px solid #cae8d4;
+      border-radius:999px;
+      padding:10px 15px;
+      font-size:13px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .quick-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
+    }
+
+    .btn{
+      border:none;
+      border-radius:16px;
+      padding:13px 18px;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .btn.primary{
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .btn.secondary{
+      background:#f6faf7;
+      color:var(--primary-dark);
+      border:1px solid #d8e8dc;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .mini-panel{
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .mini-panel h3{
+      font-size:18px;
+      margin-bottom:8px;
+    }
+
+    .mini-panel p{
+      color:var(--muted);
+      line-height:1.8;
+      font-size:14px;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .mini-box{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      background:#fafcfb;
+    }
+
+    .mini-box .title{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+
+    .mini-box .num{
+      font-size:26px;
+      font-weight:800;
+      color:var(--primary-dark);
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:14px;
+    }
+
+    .stats-card{
+      padding:20px;
+    }
+
+    .stats-card .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:12px;
+    }
+
+    .stats-card .top h3{
+      font-size:15px;
+      color:#4b5c52;
+      font-weight:700;
+    }
+
+    .stats-icon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+    }
+
+    .stats-value{
+      font-size:34px;
+      font-weight:800;
+      color:var(--primary-dark);
+      margin-bottom:8px;
+    }
+
+    .stats-note{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .content-grid{
+      display:grid;
+      grid-template-columns:1.4fr .85fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .table-wrap{
+      padding:20px;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .section-head h2{
+      font-size:24px;
+      font-weight:800;
+    }
+
+    .section-head p{
+      color:var(--muted);
+      font-size:14px;
+      margin-top:4px;
+    }
+
+    .filters{
+      display:grid;
+      grid-template-columns:1.3fr 1fr 1fr 1fr auto;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .filter-input,
+    .filter-select{
+      background:#f7faf8;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+      color:#425246;
+      width:100%;
+      outline:none;
+    }
+
+    .filter-btn{
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:14px;
+      padding:12px 16px;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    .reports-table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    .reports-table thead th{
+      text-align:right;
+      font-size:13px;
+      color:#607166;
+      padding:14px 12px;
+      border-bottom:1px solid var(--line);
+      font-weight:800;
+      background:#fbfdfc;
+    }
+
+    .reports-table tbody td{
+      padding:16px 12px;
+      border-bottom:1px solid #edf2ee;
+      font-size:14px;
+      vertical-align:middle;
+    }
+
+    .reports-table tbody tr:last-child td{
+      border-bottom:none;
+    }
+
+
+    .report-thumb{
+      width:54px;
+      height:54px;
+      border-radius:14px;
+      object-fit:cover;
+      border:1px solid var(--line);
+      background:#f3f6f5;
+      flex-shrink:0;
+    }
+
+    .report-title-wrap{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .details-image{
+      width:100%;
+      max-height:320px;
+      object-fit:cover;
+      border-radius:18px;
+      border:1px solid var(--line);
+      margin-top:12px;
+      background:#f3f6f5;
+      display:none;
+    }
+
+    .image-preview-box{
+      margin-bottom:14px;
+    }
+
+    .image-preview-empty{
+      background:#f8fbf9;
+      border:1px dashed #d9e6dd;
+      color:var(--muted);
+      border-radius:14px;
+      padding:12px;
+      font-size:14px;
+      margin-bottom:12px;
+    }
+
+    .report-title{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .report-title strong{
+      font-size:15px;
+    }
+
+    .report-title span{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .badge.new{
+      background:var(--blue-bg);
+      color:var(--blue-text);
+    }
+
+    .badge.progress{
+      background:var(--warning-bg);
+      color:var(--warning-text);
+    }
+
+    .badge.done{
+      background:var(--success-bg);
+      color:var(--success-text);
+    }
+
+    .badge.urgent{
+      background:var(--danger-bg);
+      color:var(--danger-text);
+    }
+
+    .badge.low{
+      background:#eef9f1;
+      color:#26784a;
+    }
+
+    .badge.medium{
+      background:#fff3d6;
+      color:#9a6700;
+    }
+
+    .action-buttons{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .table-action{
+      border:none;
+      background:#f2f8f4;
+      color:var(--primary-dark);
+      padding:9px 12px;
+      border-radius:12px;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .side-column{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .panel{
+      padding:20px;
+    }
+
+    .panel h3{
+      font-size:20px;
+      margin-bottom:14px;
+    }
+
+    .summary-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .summary-item{
+      background:#f8fbf9;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px 15px;
+    }
+
+    .summary-item .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:7px;
+    }
+
+    .summary-item .row:last-child{
+      margin-bottom:0;
+    }
+
+    .summary-item .label{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .summary-item .value{
+      font-size:15px;
+      font-weight:800;
+      color:var(--primary-dark);
+    }
+
+    .activity{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .activity-item{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      padding:12px 0;
+      border-bottom:1px solid #edf2ee;
+    }
+
+    .activity-item:last-child{
+      border-bottom:none;
+      padding-bottom:0;
+    }
+
+    .activity-icon{
+      width:38px;
+      height:38px;
+      border-radius:14px;
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      font-size:15px;
+    }
+
+    .activity-body h4{
+      font-size:14px;
+      margin-bottom:4px;
+    }
+
+    html {
+  scroll-behavior: smooth;
+}
+    .activity-body p{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+
+    .empty-box{
+      background:#fafcfb;
+      border:1px dashed #d9e6dd;
+      border-radius:18px;
+      padding:18px;
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .loading,
+    .error-box{
+      background:#fff;
+      border:1px solid var(--line);
+      padding:16px;
+      border-radius:16px;
+      text-align:center;
+    }
+
+    .error-box{
+      color:#b42318;
+      background:#fff5f5;
+      border-color:#fecaca;
+    }
+
+    .modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.35);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:1000;
+    }
+
+    .modal-overlay.show{
+      display:flex;
+    }
+
+    .modal{
+      width:min(760px, 100%);
+      background:#fff;
+      border-radius:26px;
+      border:1px solid var(--line);
+      box-shadow:0 20px 50px rgba(0,0,0,.15);
+      padding:24px;
+      max-height:90vh;
+      overflow:auto;
+    }
+
+    .modal-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .modal-head h3{
+      font-size:24px;
+      margin-bottom:6px;
+    }
+
+    .modal-head p{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .close-btn{
+      border:none;
+      background:#f3f6f5;
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:18px;
+      font-weight:800;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-bottom:14px;
+    }
+
+    .form-group{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .form-group.full{
+      grid-column:1 / -1;
+    }
+
+    .form-group label{
+      font-size:14px;
+      font-weight:700;
+      color:#304034;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+      outline:none;
+      background:#fafcfb;
+    }
+
+    .form-group textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .status-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+
+    .detail-box{
+      background:#f8fbf9;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      margin-bottom:12px;
+    }
+
+    .detail-box h4{
+      margin-bottom:8px;
+      font-size:15px;
+    }
+
+    .detail-box p{
+      color:var(--muted);
+      line-height:1.9;
+      font-size:14px;
+    }
+
+    .toast{
+      position:fixed;
+      left:20px;
+      bottom:20px;
+      background:#102c18;
+      color:#fff;
+      padding:14px 16px;
+      border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.2);
+      display:none;
+      z-index:1100;
+      min-width:220px;
+    }
+
+    .toast.show{
+      display:block;
+    }
+
+    .report-stats-section{
+      scroll-margin-top:20px;
+    }
+
+    .report-stats-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .report-stats-header h2{
+      font-size:26px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .report-stats-header p{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .export-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+      align-items:flex-start;
+    }
+
+    .export-dropdown{
+      background:#f8fbf9;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:10px;
+      min-width:230px;
+    }
+
+    .export-dropdown summary{
+      list-style:none;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:800;
+      color:var(--primary-dark);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .export-dropdown summary::-webkit-details-marker{
+      display:none;
+    }
+
+    .export-dropdown summary::after{
+      content:"⌄";
+      font-size:18px;
+      line-height:1;
+      transition:.2s ease;
+    }
+
+    .export-dropdown[open] summary::after{
+      transform:rotate(180deg);
+    }
+
+    .export-dropdown-actions{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .stats-toolbar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .report-stats-grid{
+      display:grid;
+      grid-template-columns:repeat(5, minmax(0, 1fr));
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .report-stat-card{
+      background:#fafcfb;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:18px;
+    }
+
+    .report-stat-card h4{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+
+    .report-stat-card .num{
+      font-size:34px;
+      font-weight:800;
+      color:var(--primary-dark);
+    }
+
+
+
+    .dashboard-section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .dashboard-section-title h2{
+      font-size:24px;
+      font-weight:800;
+    }
+
+    .dashboard-section-title p{
+      margin-top:5px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .stats-toolbar .filter-select{
+      max-width:220px;
+      background:#fff;
+    }
+
+    .report-preview{
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#fff;
+    }
+
+    .report-preview table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    .report-preview th,
+    .report-preview td{
+      padding:14px 12px;
+      border-bottom:1px solid #edf2ee;
+      text-align:right;
+      font-size:14px;
+    }
+
+    .report-preview th{
+      background:#fbfdfc;
+      color:#607166;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .hidden-export{
+      position:absolute;
+      left:-12000px;
+      top:0;
+      width:1100px;
+      max-width:1100px;
+      background:#fff;
+      color:#111;
+      padding:30px;
+      direction:rtl;
+      font-family:'Tajawal',sans-serif;
+    }
+
+    .pdf-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:18px;
+      gap:20px;
+    }
+
+    .pdf-title{
+      font-size:28px;
+      font-weight:800;
+      color:#0d6f36;
+      margin-bottom:6px;
+    }
+
+    .pdf-subtitle{
+      color:#4b5c52;
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .pdf-badge{
+      background:#e8f7ee;
+      border:1px solid #cce8d5;
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:13px;
+      font-weight:800;
+      color:#0d6f36;
+      white-space:nowrap;
+    }
+
+    .pdf-summary{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .pdf-summary-box{
+      border:1px solid #e3ebe5;
+      border-radius:16px;
+      padding:14px;
+      background:#fafcfb;
+    }
+
+    .pdf-summary-box .label{
+      font-size:13px;
+      color:#6b7c71;
+      margin-bottom:8px;
+    }
+
+    .pdf-summary-box .value{
+      font-size:28px;
+      font-weight:800;
+      color:#0d6f36;
+    }
+
+    .pdf-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+    }
+
+    .pdf-table th,
+    .pdf-table td{
+      border:1px solid #e3ebe5;
+      padding:10px;
+      text-align:right;
+      vertical-align:top;
+    }
+
+    .pdf-table th{
+      background:#f6faf7;
+      color:#304034;
+      font-weight:800;
+    }
+
+
+    .overview{
+      grid-template-columns:1fr;
+    }
+
+    .content-grid{
+      grid-template-columns:1fr;
+    }
+
+    .compact-export-section{
+      padding:22px;
+    }
+
+    .compact-export-actions{
+      align-items:flex-start;
+      position:relative;
+      margin-top:0;
+    }
+
+    .export-dropdown{
+      position:relative;
+      display:inline-block;
+    }
+
+    .export-dropdown summary{
+      list-style:none;
+      cursor:pointer;
+      border:none;
+      border-radius:16px;
+      padding:13px 18px;
+      font-size:14px;
+      font-weight:800;
+      background:#f6faf7;
+      color:var(--primary-dark);
+      border:1px solid #d8e8dc;
+    }
+
+    .export-dropdown summary::-webkit-details-marker{
+      display:none;
+    }
+
+    .export-dropdown-actions{
+      position:absolute;
+      top:calc(100% + 8px);
+      right:0;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:210px;
+      z-index:20;
+    }
+
+    .export-dropdown-actions .btn{
+      width:100%;
+      text-align:center;
+    }
+
+
+
+    
+    .stats-export-inline{
+      margin:4px 0 18px;
+      padding:14px;
+      background:#fafcfb;
+      border:1px solid var(--line);
+      border-radius:20px;
+      justify-content:flex-start;
+      align-items:center;
+    }
+
+    .stats-export-inline .btn,
+    .stats-export-inline summary{
+      min-height:46px;
+    }
+
+/* Compact desktop layout */
+    html, body{overflow-x:hidden;}
+    .layout{grid-template-columns:250px minmax(0,1fr);width:100%;max-width:100vw;overflow-x:hidden;}
+    .main{width:100%;max-width:min(980px, calc(100vw - 250px));margin:0 auto;padding:18px 14px;gap:14px;overflow-x:hidden;}
+    .sidebar{padding:20px 14px;gap:12px;}
+    .welcome-header,.hero-card,.table-wrap,.panel,.stats-card,.report-stat-card{border-radius:20px;}
+    .welcome-header{padding:16px 18px !important;min-height:auto !important;}
+    .topbar-left h1{font-size:28px;margin-bottom:4px;}
+    .topbar-left p,.top-pill{font-size:13px;}
+    .hero-card{min-height:auto;padding:18px;gap:12px;}
+    .hero-head h2{font-size:22px;margin-bottom:5px;}
+    .hero-head p{font-size:14px;line-height:1.7;}
+    .stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+    .stats-card{padding:16px;}
+    .stats-value{font-size:28px;margin-bottom:4px;}
+    .stats-icon{width:36px;height:36px;border-radius:12px;font-size:16px;}
+    .content-grid{grid-template-columns:1fr;gap:14px;}
+    .table-wrap,.panel{padding:16px;}
+    .section-head{margin-bottom:12px;}
+    .section-head h2,.report-stats-header h2{font-size:22px;}
+    .filters{gap:8px;margin-bottom:12px;}
+    .filter-input,.filter-select,.filter-btn,.btn{padding:10px 12px;font-size:13px;border-radius:12px;}
+    .reports-table thead th,.reports-table tbody td,.report-preview th,.report-preview td{padding:11px 10px;font-size:13px;}
+    .report-stats-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}
+    .report-stat-card{padding:14px;}
+    .report-stat-card .num{font-size:28px;}
+    .report-stats-preview{margin-top:16px;}
+    .report-preview{max-width:100%;overflow:auto;}
+    .reports-table{min-width:720px;}
+    #reportsStatsPreviewBody td{vertical-align:middle;}
+    @media (max-width: 1250px){
+      .overview,
+      .content-grid{
+        grid-template-columns:1fr;
+      }
+
+      .stats-grid,
+      .report-stats-grid{
+        grid-template-columns:repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 920px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .sidebar{
+        position:relative;
+        height:auto;
+      }
+
+      .main{
+        padding:18px;
+        max-width:100%;
+      }
+
+      .filters{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px){
+      .stats-grid,
+      .form-grid,
+      .status-row,
+      .report-stats-grid{
+        grid-template-columns:1fr;
+      }
+
+      .reports-table{
+        display:block;
+        overflow:auto;
+        white-space:nowrap;
+      }
+
+      .topbar-left h1{
+        font-size:28px;
+      }
+
+      .welcome-header .welcome-text h2{
+        font-size:20px;
+      }
+
+      .filters,
+      .export-actions{
+        grid-template-columns:1fr;
+        display:flex;
+        flex-direction:column;
+      }
+    }
+  
+
+/* ===== Layout fix: full-height sidebar + no extra pixels/blank scroll ===== */
+html, body {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden !important;
+}
+
+body {
+  margin: 0;
+}
+
+.layout {
+  min-height: 100vh !important;
+  grid-template-columns: 250px minmax(0, 1fr) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 250px !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+  z-index: 90 !important;
+}
+
+.main {
+  grid-column: 2 !important;
+  width: 100% !important;
+  max-width: 980px !important;
+  margin: 0 auto !important;
+  padding: 18px 14px 28px !important;
+  overflow-x: hidden !important;
+}
+
+.welcome-header {
+  width: 100% !important;
+}
+
+.hidden-export {
+  position: absolute !important;
+  top: 0 !important;
+  left: -12000px !important;
+  right: auto !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  width: 1100px !important;
+  max-width: 1100px !important;
+  min-height: 200px !important;
+  background: #fff !important;
+}
+
+@media (max-width: 920px){
+  .layout {
+    display: block !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .sidebar {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  .main {
+    grid-column: auto !important;
+    max-width: 100% !important;
+    padding: 18px !important;
+  }
+}
+
+
+    .btn.danger{
+      background:#c03221;
+      color:#fff;
+    }
+
+    .btn.danger:hover{
+      background:#9f281b;
+    }
+
+    .appointment-detail-box{
+      background:#f8fbf9;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .appointment-detail-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:9px 0;
+      border-bottom:1px solid #edf2ee;
+      font-size:14px;
+    }
+
+    .appointment-detail-row:last-child{
+      border-bottom:none;
+    }
+
+    .appointment-detail-row span{
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .appointment-detail-row strong{
+      color:var(--text);
+      font-weight:800;
+      text-align:left;
+    }
+
+  </style>
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+
+
+<div class="layout">
+  <button class="mobile-menu">☰</button>
+
+<div class="overlay"></div>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-text">
+        <h1>قسم البلاغات</h1>
+        <p>القطاع البلدي</p>
+      </div>
+    </div>
+
+   
+
+    <div class="nav-item active" data-scroll="topSection">
+      <span>صندوق البلاغات</span>
+    </div>
+    
+    <div class="nav-item" data-scroll="reportsSection">
+      <span>إدارة البلاغات</span>
+    </div>
+
+    <div class="nav-item" data-scroll="appointmentsSection">
+      <span>المواعيد</span>
+    </div>
+    
+    <div class="nav-item" id="openMapBtn">
+      <span>الخريطة التفاعلية</span>
+    </div>
+    
+    <div class="nav-item" id="openReportsPage">
+      <span>التقارير</span>
+    </div>
+    
+    <div  id="openLatestDetails">
+      
+    </div>
+
+    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+  </aside>
+
+  <main class="main">
+    <div class="welcome-header">
+      <div class="welcome-text">
+        <span>مرحبًا بك في لوحة القطاع البلدي</span>
+        <h2 id="headerWelcomeName">مرحبًا، جاري التحميل...</h2>
+      </div>
+    </div>
+
+    <div class="topbar" id="topSection">
+      <div class="topbar-left">
+        <h1>صندوق البلاغات</h1>
+        <p>متابعة البلاغات البلدية، حالة المعالجة، وسير العمل اليومي.</p>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="top-pill primary">القطاع البلدي</div>
+        <div class="top-pill" id="todayLabel">اليوم</div>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <div class="stats-card">
+        <div class="top">
+          <h3>إجمالي البلاغات</h3>
+          <div class="stats-icon">📄</div>
+        </div>
+        <div class="stats-value" id="totalReports">0</div>
+        <div class="stats-note">إجمالي البلاغات المسجلة في الصندوق</div>
+      </div>
+
+      <div class="stats-card">
+        <div class="top">
+          <h3>تحت المعالجة</h3>
+          <div class="stats-icon">⏳</div>
+        </div>
+        <div class="stats-value" id="inProgressReports">0</div>
+        <div class="stats-note">بلاغات جاري العمل عليها حاليًا</div>
+      </div>
+
+      <div class="stats-card">
+        <div class="top">
+          <h3>البلاغات المكتملة</h3>
+          <div class="stats-icon">✔</div>
+        </div>
+        <div class="stats-value" id="completedReports">0</div>
+        <div class="stats-note">تمت معالجتها وإغلاقها</div>
+      </div>
+
+      <div class="stats-card">
+        <div class="top">
+          <h3>إجمالي المواعيد</h3>
+          <div class="stats-icon">📅</div>
+        </div>
+        <div class="stats-value" id="statAppointments">0</div>
+        <div class="stats-note">مواعيد بلدي المسجلة من التطبيق</div>
+      </div>
+    </section>
+
+
+    <section class="overview">
+      <div class="hero-card">
+        <div class="hero-head">
+          <div>
+            <h2>لوحة متابعة البلاغات</h2>
+            
+          </div>
+          <div class="hero-badge">واجهة قسم البلاغات</div>
+        </div>
+
+        <div class="quick-actions">
+          <button class="btn primary" id="addReportBtn">إضافة بلاغ</button>
+          <button class="btn secondary" id="refreshBtn">تحديث البيانات</button>
+          <button class="btn secondary" id="showMapFakeBtn">عرض الخريطة</button>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="content-grid">
+      <div class="table-wrap" id="reportsSection">
+        <div class="section-head">
+          <div>
+            <h2>قائمة البلاغات</h2>
+          </div>
+          <div class="top-pill" id="lastUpdateLabel">آخر تحديث: --</div>
+        </div>
+
+        <div class="filters">
+          <input id="searchInput" class="filter-input" type="text" placeholder="ابحث بعنوان البلاغ أو الموقع..." />
+          <select id="statusFilter" class="filter-select">
+            <option value="">الحالة: الكل</option>
+            <option value="new">جديد</option>
+            <option value="open">مفتوح</option>
+            <option value="in_progress">تحت المعالجة</option>
+            <option value="completed">مكتمل</option>
+          </select>
+          <select id="priorityFilter" class="filter-select">
+            <option value="">الأولوية: الكل</option>
+            <option value="low">منخفضة</option>
+            <option value="medium">متوسطة</option>
+            <option value="urgent">عاجلة</option>
+          </select>
+          <select id="locationFilter" class="filter-select">
+            <option value="">المنطقة: الكل</option>
+          </select>
+          <button id="clearFiltersBtn" class="filter-btn" type="button">إعادة الضبط</button>
+        </div>
+
+        <div id="tableStateBox" class="loading">جاري تحميل البلاغات...</div>
+
+        <table class="reports-table" id="reportsTable" style="display:none;">
+          <thead>
+            <tr>
+              <th>البلاغ</th>
+              <th>الموقع</th>
+              <th>الحالة</th>
+              <th>الأولوية</th>
+              <th>آخر تحديث</th>
+              <th>الإجراء</th>
+            </tr>
+          </thead>
+          <tbody id="reportsTableBody"></tbody>
+        </table>
+      </div>
+
+
+    </section>
+
+
+    <section class="panel report-stats-section" id="appointmentsSection">
+      <div class="report-stats-header">
+        <div>
+          <h2>المواعيد البلدية</h2>
+        </div>
+        <div class="top-pill primary">مواعيد بلدي</div>
+      </div>
+
+      <div class="table-wrap" style="box-shadow:none; padding:20px;">
+        <div class="section-head">
+          <div>
+            <h2>قائمة المواعيد</h2>
+          </div>
+          <div class="top-pill" id="appointmentsLastUpdateLabel">آخر تحديث: --</div>
+        </div>
+
+        <div id="appointmentsStateBox" class="loading">جاري تحميل مواعيد بلدي...</div>
+
+        <table class="reports-table" id="appointmentsTable" style="display:none;">
+          <thead>
+            <tr>
+              <th>الموعد</th>
+              <th>القطاع</th>
+              <th>التاريخ</th>
+              <th>الوقت</th>
+              <th>الحالة</th>
+              <th>المستخدم</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel report-stats-section" id="reportsStatsSection">
+      <div class="dashboard-section-title">
+        <div>
+          <h2>إحصائيات البلاغات والمواعيد</h2>
+        </div>
+        <select id="statsTypeFilter" class="filter-select">
+          <option value="all" selected>عرض الكل</option>
+          <option value="reports">البلاغات فقط</option>
+          <option value="appointments">المواعيد فقط</option>
+        </select>
+      </div>
+
+      <div class="report-stats-grid">
+        <div class="report-stat-card report-stat-item" data-stat-type="reports">
+          <h4>كل البلاغات</h4>
+          <div class="num" id="statAll">0</div>
+        </div>
+        <div class="report-stat-card report-stat-item" data-stat-type="reports">
+          <h4>المفتوحة</h4>
+          <div class="num" id="statOpen">0</div>
+        </div>
+        <div class="report-stat-card report-stat-item" data-stat-type="reports">
+          <h4>قيد المعالجة</h4>
+          <div class="num" id="statProgress">0</div>
+        </div>
+        <div class="report-stat-card report-stat-item" data-stat-type="reports">
+          <h4>المقفلة</h4>
+          <div class="num" id="statDone">0</div>
+        </div>
+        <div class="report-stat-card report-stat-item appointment-stat-card" data-stat-type="appointments">
+          <h4>مواعيد بلدي</h4>
+          <div class="num" id="appointmentsTotal">0</div>
+        </div>
+      </div>
+
+      
+      <div class="export-actions compact-export-actions stats-export-inline">
+        <details class="export-dropdown">
+          <summary>تصدير البلاغات PDF</summary>
+          <div class="export-dropdown-actions">
+            <button class="btn primary" id="exportAllBtn">كل البلاغات</button>
+            <button class="btn secondary" id="exportOpenBtn">المفتوحة</button>
+            <button class="btn secondary" id="exportProgressBtn">قيد المعالجة</button>
+            <button class="btn secondary" id="exportClosedBtn">المقفلة</button>
+          </div>
+        </details>
+        <button class="btn primary" id="exportAppointmentsBtn">تصدير المواعيد PDF</button>
+      </div>
+
+      <div class="report-stats-preview">
+        <div class="section-head">
+          <div>
+            <h2 id="statsPreviewTitle">تقرير البلاغات والمواعيد</h2>
+            <p id="statsPreviewSubtitle">آخر البيانات حسب الفلتر المحدد.</p>
+          </div>
+        </div>
+        <div class="report-preview">
+          <table id="statsPreviewTable">
+            <thead id="statsPreviewHead">
+              <tr>
+                <th>العنوان</th>
+                <th>الموقع</th>
+                <th>الحالة</th>
+                <th>الأولوية</th>
+                <th>آخر تحديث</th>
+              </tr>
+            </thead>
+            <tbody id="reportsStatsPreviewBody">
+              <tr>
+                <td colspan="5" class="empty-box">جاري تحميل البيانات...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    
+  </main>
+</div>
+
+<div class="modal-overlay" id="addModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h3>إضافة بلاغ جديد</h3>
+        <p>سيتم حفظ البلاغ مباشرة في قاعدة البيانات.</p>
+      </div>
+      <button class="close-btn" id="closeAddModal">×</button>
+    </div>
+
+    <form id="addReportForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="reportTitle">عنوان البلاغ</label>
+          <input id="reportTitle" type="text" required />
+        </div>
+
+        <div class="form-group">
+          <label for="reportLocation">الموقع</label>
+          <input id="reportLocation" type="text" required />
+        </div>
+
+        <div class="form-group">
+          <label for="reportCategory">الفئة</label>
+          <select id="reportCategory" required>
+            <option value="municipality">بلدي</option>
+            <option value="lighting">إنارة</option>
+            <option value="cleaning">نظافة</option>
+            <option value="roads">طرق</option>
+            <option value="water">مياه</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="reportPriority">الأولوية</label>
+          <select id="reportPriority" required>
+            <option value="low">منخفضة</option>
+            <option value="medium" selected>متوسطة</option>
+            <option value="urgent">عاجلة</option>
+          </select>
+        </div>
+
+        <div class="form-group full">
+          <label for="reportDescription">وصف البلاغ</label>
+          <textarea id="reportDescription" required></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn primary" type="submit">حفظ البلاغ</button>
+        <button class="btn secondary" type="button" id="cancelAddModal">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="detailsModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h3>تفاصيل البلاغ</h3>
+        <p>يمكنك مراجعة البيانات وتحديث الحالة والأولوية.</p>
+      </div>
+      <button class="close-btn" id="closeDetailsModal">×</button>
+    </div>
+
+    <div id="detailsContent"></div>
+  </div>
+</div>
+
+
+
+<div class="modal-overlay" id="appointmentModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h3>إجراء على الموعد</h3>
+        <p>اختر اعتماد أو رفض الموعد البلدي المحدد.</p>
+      </div>
+      <button class="close-btn" id="closeAppointmentModal" type="button">×</button>
+    </div>
+
+    <div class="appointment-detail-box" id="appointmentModalContent"></div>
+
+    <div class="modal-actions">
+      <button class="btn primary" id="approveAppointmentBtn" type="button">اعتماد الموعد</button>
+      <button class="btn danger" id="rejectAppointmentBtn" type="button">رفض الموعد</button>
+      <button class="btn secondary" id="cancelAppointmentModal" type="button">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="pdfExportContainer" class="hidden-export"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script type="module">
+  import { db } from "./Login/api.js";
+  import {
+    collection,
+    getDocs,
+    addDoc,
+    doc,
+    getDoc,
+    updateDoc,
+    query,
+    orderBy,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const savedUser =
+    localStorage.getItem("portalUser") ||
+    sessionStorage.getItem("portalUser");
+
+  if (!savedUser) {
+    window.location.href = "Login/login.html";
+  }
+
+  let currentUser = null;
+
+  try {
+    currentUser = JSON.parse(savedUser);
+  } catch (e) {
+    window.location.href = "Login/login.html";
+  }
+
+  if (!currentUser || !currentUser.isLoggedIn || !currentUser.otpVerified || currentUser.user?.role !== "balady") {
+  window.location.href = "Login/login.html";
+}
+
+  let currentUserName =
+    currentUser.name ||
+    currentUser.displayName ||
+    currentUser.user?.name ||
+    currentUser.user?.displayName ||
+    currentUser.user?.fullName ||
+    "المستخدم";
+
+  async function loadUserNameFromDatabase() {
+    const headerWelcomeName = document.getElementById("headerWelcomeName");
+    const sidebarWelcomeName = document.getElementById("welcomeName");
+
+    const setName = (name) => {
+      currentUserName = name || "المستخدم";
+      if (headerWelcomeName) headerWelcomeName.textContent = "مرحبًا، " + currentUserName;
+      if (sidebarWelcomeName) sidebarWelcomeName.textContent = "مرحبًا، " + currentUserName;
+    };
+
+    setName(currentUserName);
+
+    const userId =
+      currentUser.id ||
+      currentUser.uid ||
+      currentUser.userId ||
+      currentUser.user?.id ||
+      currentUser.user?.uid ||
+      currentUser.user?.userId;
+
+    if (!userId) return;
+
+    try {
+      const userSnap = await getDoc(doc(db, "users", userId));
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        setName(data.name || data.displayName || data.fullName || currentUserName);
+      }
+    } catch (error) {
+      console.error("تعذر جلب اسم المستخدم من قاعدة البيانات", error);
+    }
+  }
+
+  loadUserNameFromDatabase();
+
+  const today = new Date();
+  const formattedToday = today.toLocaleDateString("ar-SA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+  document.getElementById("todayLabel").textContent = formattedToday;
+
+  const reportsCollection = collection(db, "reports");
+  const appointmentsCollection = collection(db, "appointments");
+
+  let allReports = [];
+  let allAppointments = [];
+  let filteredReports = [];
+  let selectedReport = null;
+  let selectedAppointmentId = null;
+
+  const reportsTableBody = document.getElementById("reportsTableBody");
+  const reportsTable = document.getElementById("reportsTable");
+  const tableStateBox = document.getElementById("tableStateBox");
+  const locationFilter = document.getElementById("locationFilter");
+  const searchInput = document.getElementById("searchInput");
+  const statusFilter = document.getElementById("statusFilter");
+  const priorityFilter = document.getElementById("priorityFilter");
+  const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+  const addModalOverlay = document.getElementById("addModalOverlay");
+  const detailsModalOverlay = document.getElementById("detailsModalOverlay");
+  const addReportForm = document.getElementById("addReportForm");
+  const toast = document.getElementById("toast");
+  const reportsStatsPreviewBody = document.getElementById("reportsStatsPreviewBody");
+  const appointmentsTableBody = document.getElementById("appointmentsTableBody");
+  const appointmentModalOverlay = document.getElementById("appointmentModalOverlay");
+  const appointmentModalContent = document.getElementById("appointmentModalContent");
+  const closeAppointmentModal = document.getElementById("closeAppointmentModal");
+  const cancelAppointmentModal = document.getElementById("cancelAppointmentModal");
+  const approveAppointmentBtn = document.getElementById("approveAppointmentBtn");
+  const rejectAppointmentBtn = document.getElementById("rejectAppointmentBtn");
+  const appointmentsTable = document.getElementById("appointmentsTable");
+  const appointmentsStateBox = document.getElementById("appointmentsStateBox");
+
+  function logout() {
+    localStorage.removeItem("portalUser");
+    sessionStorage.removeItem("portalUser");
+    localStorage.removeItem("portalPendingAuth");
+    sessionStorage.removeItem("portalPendingAuth");
+    window.location.href = "Login/login.html";
+  }
+
+  window.logout = logout;
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2500);
+  }
+
+  function formatDate(value) {
+    if (!value) return "—";
+    try {
+      if (typeof value.toDate === "function") {
+        return value.toDate().toLocaleString("ar-SA");
+      }
+      const d = new Date(value);
+      return d.toLocaleString("ar-SA");
+    } catch {
+      return "—";
+    }
+  }
+
+  function statusLabel(status) {
+    if (status === "new") return "جديد";
+    if (status === "open") return "مفتوح";
+    if (status === "in_progress") return "تحت المعالجة";
+    if (status === "completed") return "مكتمل";
+    return status || "غير محدد";
+  }
+
+  function statusClass(status) {
+    if (status === "new" || status === "open") return "new";
+    if (status === "in_progress") return "progress";
+    if (status === "completed") return "done";
+    return "new";
+  }
+
+  function priorityLabel(priority) {
+    if (priority === "low") return "منخفضة";
+    if (priority === "medium") return "متوسطة";
+    if (priority === "urgent") return "عاجلة";
+    return priority || "غير محددة";
+  }
+
+  function priorityClass(priority) {
+    if (priority === "urgent") return "urgent";
+    if (priority === "medium") return "medium";
+    if (priority === "low") return "low";
+    return "medium";
+  }
+
+  function buildReportCode(index) {
+    return "BLD-" + String(1000 + index);
+  }
+
+  function normalizeLocation(value) {
+    if (!value) return "غير محدد";
+
+    if (typeof value === "string") return value;
+
+    if (typeof value.latitude === "number" && typeof value.longitude === "number") {
+      return `${value.latitude}, ${value.longitude}`;
+    }
+
+    if (typeof value.lat === "number" && typeof value.lng === "number") {
+      return `${value.lat}, ${value.lng}`;
+    }
+
+    return "غير محدد";
+  }
+
+
+  function normalizePhoto(value) {
+    if (!value || typeof value !== "string") return "";
+    const photo = value.trim();
+    if (!photo) return "";
+    if (photo.startsWith("data:image") || photo.startsWith("http://") || photo.startsWith("https://")) {
+      return photo;
+    }
+    return `data:image/jpeg;base64,${photo}`;
+  }
+
+  function normalizeReport(docSnap, index) {
+    const data = docSnap.data();
+    const locationValue = data.location || data.locationName || data.address || data.place;
+    const latFromLocation = data.location?.latitude || data.location?.lat || null;
+    const lngFromLocation = data.location?.longitude || data.location?.lng || null;
+
+    return {
+      id: docSnap.id,
+      code: buildReportCode(index + 1),
+      title: data.title || data.reportTitle || data.name || "بدون عنوان",
+      description: data.description || data.details || data.note || "",
+      category: data.category || data.type || "municipality",
+      status: data.status || "new",
+      location: normalizeLocation(locationValue),
+      priority: data.priority || "medium",
+      photo: normalizePhoto(data.photo_base64 || data.photo_url || data.photoUrl || data.image || data.image_base64 || ""),
+      lat: typeof data.lat === "number" ? data.lat : latFromLocation,
+      lng: typeof data.lng === "number" ? data.lng : lngFromLocation,
+      createdAt: data.createdAt || data.created_time || null,
+      updatedAt: data.updatedAt || data.createdAt || data.created_time || null,
+      createdBy: data.createdBy || data.uid || "",
+      assignedTo: data.assignedTo || "",
+    };
+  }
+
+  function buildAppointmentCode(index) {
+    return "APT-" + String(1000 + index);
+  }
+
+  function normalizeAppointment(docSnap, index) {
+    const data = docSnap.data();
+
+    return {
+      id: docSnap.id,
+      code: buildAppointmentCode(index + 1),
+
+      clinicName:
+        data.municipality_name ||
+        data.office_name ||
+        data.branch_name ||
+        data.department_name ||
+        data.center_name ||
+        data.municipalityName ||
+        data.officeName ||
+        data.branchName ||
+        "بلدي",
+
+      serviceType:
+        data.service_type_Balady ||
+        data.serviceType_Balady ||
+        data.service_type_balady ||
+        data.serviceTypeBalady ||
+        data.serviceType ||
+        data.service_type ||
+        data.category ||
+        data.type ||
+        "موعد بلدي",
+
+      description: data.description || data.notes || "",
+
+      date:
+        data.appointment_date ||
+        data.appointmentDate ||
+        data.selected_date ||
+        data.selectedDate ||
+        data.booking_date ||
+        data.bookingDate ||
+        data.date ||
+        data.created_time ||
+        null,
+
+      time:
+        data.appointment_time ||
+        data.appointmentTime ||
+        data.selected_time ||
+        data.selectedTime ||
+        data.booking_time ||
+        data.bookingTime ||
+        data.time ||
+        "—",
+
+      status:
+        data.status ||
+        data.appointment_status ||
+        data.appointmentStatus ||
+        "pending",
+
+      displayName:
+        data.display_name ||
+        data.fullName ||
+        data.name ||
+        "غير محدد",
+
+      phoneNumber:
+        data.phone_number ||
+        data.phone ||
+        "—",
+
+      createdAt:
+        data.created_time ||
+        data.createdAt ||
+        data.date ||
+        null,
+
+      raw: data
+    };
+  }
+
+  function isBaladyAppointment(data) {
+    if (data.is_balady === true) return true;
+
+    const text = [
+      data.category,
+      data.service_type_Balady,
+      data.serviceType_Balady,
+      data.service_type_balady,
+      data.serviceTypeBalady,
+      data.serviceType,
+      data.service_type,
+      data.type,
+      data.department,
+      data.sector,
+      data.source,
+      data.appointmentType,
+      data.municipality_name,
+      data.office_name,
+      data.branch_name
+    ].filter(Boolean).join(" ").toLowerCase();
+
+    const isBalady =
+      text.includes("balady") ||
+      text.includes("municipality") ||
+      text.includes("municipal") ||
+      text.includes("بلدي") ||
+      text.includes("بلدية") ||
+      text.includes("البلدي");
+
+    const isHealth =
+      text.includes("health") ||
+      text.includes("clinic") ||
+      text.includes("medical") ||
+      text.includes("صحي") ||
+      text.includes("صحة") ||
+      text.includes("عيادة") ||
+      text.includes("مركز صحي") ||
+      Boolean(data.health_center_name) ||
+      Boolean(data.clinic_name);
+
+    return isBalady && !isHealth;
+  }
+
+  function normalizeAppointmentStatus(status) {
+    return String(status || "pending").trim().toLowerCase();
+  }
+
+  function appointmentStatusLabel(status) {
+    const value = normalizeAppointmentStatus(status);
+    if (value === "new" || value === "pending") return "قيد المراجعة";
+    if (value === "confirmed" || value === "approved") return "مقبول";
+    if (value === "rejected" || value === "cancelled" || value === "canceled") return "مرفوض";
+    if (value === "completed" || value === "done") return "مكتمل";
+    return status || "غير محدد";
+  }
+
+  function appointmentStatusClass(status) {
+    const value = normalizeAppointmentStatus(status);
+    if (value === "completed" || value === "done" || value === "confirmed" || value === "approved") return "done";
+    if (value === "rejected" || value === "cancelled" || value === "canceled") return "urgent";
+    if (value === "in_progress") return "progress";
+    return "new";
+  }
+
+  async function fetchAppointments() {
+    try {
+      appointmentsStateBox.className = "loading";
+      appointmentsStateBox.textContent = "جاري تحميل مواعيد بلدي...";
+      appointmentsStateBox.style.display = "block";
+      appointmentsTable.style.display = "none";
+
+      const snapshot = await getDocs(appointmentsCollection);
+      const temp = [];
+      let counter = 0;
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+
+        // نعرض مواعيد بلدي فقط ونستبعد مواعيد صحتي
+        if (isBaladyAppointment(data)) {
+          temp.push(normalizeAppointment(docSnap, counter));
+          counter += 1;
+        }
+      });
+
+      temp.sort((a, b) => {
+        const getTime = (value) => {
+          if (!value) return 0;
+          if (typeof value.toDate === "function") return value.toDate().getTime();
+          const dateValue = new Date(value).getTime();
+          return Number.isNaN(dateValue) ? 0 : dateValue;
+        };
+        return getTime(b.createdAt || b.date) - getTime(a.createdAt || a.date);
+      });
+
+      allAppointments = temp;
+      renderAppointmentsTable();
+      updateAppointmentsStats();
+      updateReportStatsPreview();
+      document.getElementById("appointmentsLastUpdateLabel").textContent = "آخر تحديث: " + new Date().toLocaleTimeString("ar-SA");
+    } catch (error) {
+      console.error(error);
+      appointmentsStateBox.className = "error-box";
+      appointmentsStateBox.textContent = "تعذر تحميل مواعيد بلدي من قاعدة البيانات.";
+      appointmentsStateBox.style.display = "block";
+      appointmentsTable.style.display = "none";
+    }
+  }
+
+  function renderAppointmentsTable() {
+    appointmentsTableBody.innerHTML = "";
+
+    if (!allAppointments.length) {
+      appointmentsStateBox.className = "loading";
+      appointmentsStateBox.textContent = "لا توجد مواعيد بلدية حالياً.";
+      appointmentsStateBox.style.display = "block";
+      appointmentsTable.style.display = "none";
+      return;
+    }
+
+    appointmentsStateBox.style.display = "none";
+    appointmentsTable.style.display = "table";
+
+    allAppointments.forEach((appointment) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>
+          <div class="report-title">
+            <strong>${escapeHtml(appointment.serviceType)}</strong>
+            <span>#${escapeHtml(appointment.code)}</span>
+          </div>
+        </td>
+        <td>${escapeHtml(appointment.clinicName)}</td>
+        <td>${formatDate(appointment.date)}</td>
+        <td>${escapeHtml(appointment.time)}</td>
+        <td><span class="badge ${appointmentStatusClass(appointment.status)}">${appointmentStatusLabel(appointment.status)}</span></td>
+        <td>
+          <div class="report-title">
+            <strong>${escapeHtml(appointment.displayName)}</strong>
+            <span>${escapeHtml(appointment.phoneNumber)}</span>
+          </div>
+        </td>
+        <td>
+          <button class="table-action" type="button" onclick="openAppointmentActionModal('${escapeHtml(appointment.id)}')">إجراء</button>
+        </td>
+      `;
+      appointmentsTableBody.appendChild(tr);
+    });
+  }
+
+
+  function openAppointmentActionModal(appointmentId) {
+    const item = allAppointments.find(app => app.id === appointmentId);
+    if (!item) {
+      showToast("تعذر العثور على الموعد");
+      return;
+    }
+
+    selectedAppointmentId = appointmentId;
+    const status = normalizeAppointmentStatus(item.status);
+    const isPending = status === "pending" || status === "new";
+
+    appointmentModalContent.innerHTML = `
+      <div class="appointment-detail-row">
+        <span>نوع الخدمة</span>
+        <strong>${escapeHtml(item.serviceType)}</strong>
+      </div>
+      <div class="appointment-detail-row">
+        <span>القطاع / الفرع</span>
+        <strong>${escapeHtml(item.clinicName)}</strong>
+      </div>
+      <div class="appointment-detail-row">
+        <span>التاريخ</span>
+        <strong>${formatDate(item.date)}</strong>
+      </div>
+      <div class="appointment-detail-row">
+        <span>الوقت</span>
+        <strong>${escapeHtml(item.time)}</strong>
+      </div>
+      <div class="appointment-detail-row">
+        <span>المستخدم</span>
+        <strong>${escapeHtml(item.displayName)}</strong>
+      </div>
+      <div class="appointment-detail-row">
+        <span>رقم الجوال</span>
+        <strong>${escapeHtml(item.phoneNumber)}</strong>
+      </div>
+      <div class="appointment-detail-row">
+        <span>الحالة الحالية</span>
+        <strong>${escapeHtml(appointmentStatusLabel(item.status))}</strong>
+      </div>
+    `;
+
+    // خلي أزرار الاعتماد والرفض قابلة للضغط دائمًا حتى لو كانت الحالة السابقة مؤكدة
+    approveAppointmentBtn.disabled = false;
+    rejectAppointmentBtn.disabled = false;
+    approveAppointmentBtn.style.opacity = "1";
+    rejectAppointmentBtn.style.opacity = "1";
+    approveAppointmentBtn.style.pointerEvents = "auto";
+    rejectAppointmentBtn.style.pointerEvents = "auto";
+
+    // ربط مباشر للأزرار عند فتح النافذة لضمان أن الـ ID الحالي يوصل للدالة
+    approveAppointmentBtn.onclick = () => approveAppointment(appointmentId);
+    rejectAppointmentBtn.onclick = () => rejectAppointment(appointmentId);
+
+    appointmentModalOverlay.classList.add("show");
+  }
+
+  function closeAppointmentActionModal() {
+    selectedAppointmentId = null;
+    appointmentModalOverlay.classList.remove("show");
+  }
+
+  async function approveAppointment(appointmentId) {
+    try {
+      await updateDoc(doc(db, "appointments", appointmentId), {
+        status: "approved",
+        appointment_status: "approved",
+        appointmentStatus: "approved",
+        updatedAt: serverTimestamp(),
+        approvedAt: serverTimestamp(),
+        approvedBy: currentUser?.id || currentUser?.uid || currentUser?.user?.id || currentUser?.user?.uid || ""
+      });
+
+      const item = allAppointments.find(app => app.id === appointmentId);
+      if (item) item.status = "approved";
+      renderAppointmentsTable();
+      updateAppointmentsStats();
+      updateReportStatsPreview();
+      closeAppointmentActionModal();
+      showToast("تم اعتماد الموعد بنجاح");
+    } catch (error) {
+      console.error(error);
+      showToast("تعذر اعتماد الموعد");
+    }
+  }
+
+  async function rejectAppointment(appointmentId) {
+    try {
+      await updateDoc(doc(db, "appointments", appointmentId), {
+        status: "rejected",
+        appointment_status: "rejected",
+        appointmentStatus: "rejected",
+        updatedAt: serverTimestamp(),
+        rejectedAt: serverTimestamp(),
+        rejectedBy: currentUser?.id || currentUser?.uid || currentUser?.user?.id || currentUser?.user?.uid || ""
+      });
+
+      const item = allAppointments.find(app => app.id === appointmentId);
+      if (item) item.status = "rejected";
+      renderAppointmentsTable();
+      updateAppointmentsStats();
+      updateReportStatsPreview();
+      closeAppointmentActionModal();
+      showToast("تم رفض الموعد بنجاح");
+    } catch (error) {
+      console.error(error);
+      showToast("تعذر رفض الموعد");
+    }
+  }
+
+  function updateAppointmentsStats() {
+    const total = allAppointments.length;
+    const newCount = allAppointments.filter(a => a.status === "new" || a.status === "pending").length;
+    const confirmed = allAppointments.filter(a => a.status === "confirmed" || a.status === "approved").length;
+    const done = allAppointments.filter(a => a.status === "completed" || a.status === "done").length;
+
+    setText("appointmentsTotal", total);
+    setText("appointmentsNew", newCount);
+    setText("appointmentsConfirmed", confirmed);
+    setText("appointmentsDone", done);
+setText("statAppointments", total);
+  }
+
+  async function fetchReports() {
+    try {
+      tableStateBox.className = "loading";
+      tableStateBox.textContent = "جاري تحميل البلاغات...";
+      tableStateBox.style.display = "block";
+      reportsTable.style.display = "none";
+
+      // نقرأ كل البلاغات بدون orderBy حتى لا تختفي البلاغات التي تستخدم created_time بدل createdAt
+      const snapshot = await getDocs(reportsCollection);
+
+      const temp = [];
+      let counter = 0;
+
+      snapshot.forEach((docSnap) => {
+        const report = normalizeReport(docSnap, counter);
+        counter += 1;
+
+        // تم إلغاء فلترة category لأنها كانت تمنع بلاغات التطبيق من الظهور
+        // الآن الصفحة تعرض كل البلاغات الموجودة داخل collection reports
+        temp.push(report);
+      });
+
+      temp.sort((a, b) => {
+        const getTime = (value) => {
+          if (!value) return 0;
+          if (typeof value.toDate === "function") return value.toDate().getTime();
+          const dateValue = new Date(value).getTime();
+          return Number.isNaN(dateValue) ? 0 : dateValue;
+        };
+
+        return getTime(b.createdAt || b.updatedAt) - getTime(a.createdAt || a.updatedAt);
+      });
+
+      allReports = temp;
+      updateLocationOptions();
+      applyFilters();
+      updateStats();
+      updateActivities();
+      updateReportStatsPreview();
+      document.getElementById("lastUpdateLabel").textContent = "آخر تحديث: " + new Date().toLocaleTimeString("ar-SA");
+    } catch (error) {
+      console.error(error);
+      tableStateBox.className = "error-box";
+      tableStateBox.textContent = "تعذر تحميل البيانات من قاعدة البيانات.";
+      tableStateBox.style.display = "block";
+      reportsTable.style.display = "none";
+    }
+  }
+
+  function updateLocationOptions() {
+    const currentValue = locationFilter.value;
+    const uniqueLocations = [...new Set(allReports.map(r => r.location).filter(Boolean))];
+
+    locationFilter.innerHTML = `<option value="">المنطقة: الكل</option>`;
+    uniqueLocations.forEach(location => {
+      const option = document.createElement("option");
+      option.value = location;
+      option.textContent = location;
+      locationFilter.appendChild(option);
+    });
+
+    locationFilter.value = currentValue;
+  }
+
+  function applyFilters() {
+    const searchValue = searchInput.value.trim().toLowerCase();
+    const statusValue = statusFilter.value;
+    const priorityValue = priorityFilter.value;
+    const locationValue = locationFilter.value;
+
+    filteredReports = allReports.filter(report => {
+      const matchesSearch =
+        report.title.toLowerCase().includes(searchValue) ||
+        report.location.toLowerCase().includes(searchValue) ||
+        report.description.toLowerCase().includes(searchValue);
+
+      const matchesStatus = !statusValue || report.status === statusValue;
+      const matchesPriority = !priorityValue || report.priority === priorityValue;
+      const matchesLocation = !locationValue || report.location === locationValue;
+
+      return matchesSearch && matchesStatus && matchesPriority && matchesLocation;
+    });
+
+    renderReportsTable();
+  }
+
+  function renderReportsTable() {
+    reportsTableBody.innerHTML = "";
+
+    if (filteredReports.length === 0) {
+      tableStateBox.className = "loading";
+      tableStateBox.textContent = "لا توجد بلاغات مطابقة للفلاتر الحالية.";
+      tableStateBox.style.display = "block";
+      reportsTable.style.display = "none";
+      return;
+    }
+
+    tableStateBox.style.display = "none";
+    reportsTable.style.display = "table";
+
+    filteredReports.forEach((report) => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>
+          <div class="report-title-wrap">
+            <div class="report-title">
+              <strong>${escapeHtml(report.title)}</strong>
+              <span>#${escapeHtml(report.code)}</span>
+            </div>
+          </div>
+        </td>
+        <td>${escapeHtml(report.location)}</td>
+        <td><span class="badge ${statusClass(report.status)}">${statusLabel(report.status)}</span></td>
+        <td><span class="badge ${priorityClass(report.priority)}">${priorityLabel(report.priority)}</span></td>
+        <td>${formatDate(report.updatedAt || report.createdAt)}</td>
+        <td>
+          <div class="action-buttons">
+            <button class="table-action view-btn" data-id="${report.id}">عرض</button>
+            <button class="table-action update-btn" data-id="${report.id}">تحديث</button>
+          </div>
+        </td>
+      `;
+
+      reportsTableBody.appendChild(tr);
+    });
+
+    document.querySelectorAll(".view-btn").forEach(btn => {
+      btn.addEventListener("click", () => openDetails(btn.dataset.id, false));
+    });
+
+    document.querySelectorAll(".update-btn").forEach(btn => {
+      btn.addEventListener("click", () => openDetails(btn.dataset.id, true));
+    });
+  }
+
+  function updateStats() {
+    const total = allReports.length;
+    const inProgress = allReports.filter(r => r.status === "in_progress").length;
+    const completed = allReports.filter(r => r.status === "completed").length;
+    const urgent = allReports.filter(r => r.priority === "urgent").length;
+    const newCount = allReports.filter(r => r.status === "new" || r.status === "open").length;
+
+    const todayDate = new Date().toDateString();
+    const todayCount = allReports.filter(r => {
+      if (!r.createdAt?.toDate) return false;
+      return r.createdAt.toDate().toDateString() === todayDate;
+    }).length;
+
+    const completionPercentage = total ? Math.round((completed / total) * 100) : 0;
+
+    setText("totalReports", total);
+    setText("inProgressReports", inProgress);
+    setText("completedReports", completed);
+    setText("urgentReports", urgent);
+    setText("urgentMini", urgent);
+    setText("summaryNew", newCount);
+    setText("summaryWaiting", newCount);
+    setText("completionRate", completionPercentage + "%");
+    setText("todayReports", todayCount);
+
+    setText("statAll", total);
+    setText("statOpen", allReports.filter(r => r.status === "open" || r.status === "new").length);
+    setText("statProgress", inProgress);
+    setText("statDone", completed);
+    applyStatsTypeFilter();
+  }
+
+  function applyStatsTypeFilter() {
+    const filter = document.getElementById("statsTypeFilter");
+    if (!filter) return;
+
+    const value = filter.value || "all";
+    const cards = document.querySelectorAll("#reportsStatsSection .report-stat-item");
+
+    cards.forEach(card => {
+      const type = card.dataset.statType;
+      card.style.display = value === "all" || value === type ? "block" : "none";
+    });
+
+    updateReportStatsPreview();
+  }
+
+  function updateActivities() {
+    const activityList = document.getElementById("activityList");
+    if (!activityList) return;
+    activityList.innerHTML = "";
+
+    const latest = allReports.slice(0, 3);
+
+    if (latest.length === 0) {
+      activityList.innerHTML = `
+        <div class="activity-item">
+          <div class="activity-icon">i</div>
+          <div class="activity-body">
+            <h4>لا توجد أنشطة</h4>
+            <p>ابدأ بإضافة بلاغ جديد لعرض النشاط هنا.</p>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    latest.forEach(report => {
+      const item = document.createElement("div");
+      item.className = "activity-item";
+      item.innerHTML = `
+        <div class="activity-icon">${report.status === "completed" ? "✔" : report.status === "in_progress" ? "↺" : "＋"}</div>
+        <div class="activity-body">
+          <h4>${escapeHtml(report.title)}</h4>
+          <p>الحالة: ${statusLabel(report.status)} — الموقع: ${escapeHtml(report.location)}</p>
+        </div>
+      `;
+      activityList.appendChild(item);
+    });
+  }
+
+  function updateReportStatsPreview() {
+    if (!reportsStatsPreviewBody) return;
+
+    const filterValue = document.getElementById("statsTypeFilter")?.value || "all";
+    const head = document.getElementById("statsPreviewHead");
+    const title = document.getElementById("statsPreviewTitle");
+    const subtitle = document.getElementById("statsPreviewSubtitle");
+
+    if (filterValue === "appointments") {
+      if (title) title.textContent = "تقرير مواعيد بلدي";
+      if (subtitle) subtitle.textContent = "آخر مواعيد بلدي المسجلة من التطبيق.";
+      if (head) {
+        head.innerHTML = `
+          <tr>
+            <th>الخدمة</th>
+            <th>الجهة</th>
+            <th>التاريخ</th>
+            <th>الوقت</th>
+            <th>الحالة</th>
+          </tr>
+        `;
+      }
+
+      const latestAppointments = allAppointments.slice(0, 8);
+      if (!latestAppointments.length) {
+        reportsStatsPreviewBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="empty-box">لا توجد مواعيد بلدية حالياً</td>
+          </tr>
+        `;
+        return;
+      }
+
+      reportsStatsPreviewBody.innerHTML = latestAppointments.map(appointment => `
+        <tr>
+          <td>${escapeHtml(appointment.serviceType)}</td>
+          <td>${escapeHtml(appointment.clinicName)}</td>
+          <td>${formatDate(appointment.date)}</td>
+          <td>${escapeHtml(appointment.time)}</td>
+          <td>${appointmentStatusLabel(appointment.status)}</td>
+        </tr>
+      `).join("");
+      return;
+    }
+
+    if (title) title.textContent = filterValue === "reports" ? "تقرير البلاغات" : "تقرير البلاغات والمواعيد";
+    if (subtitle) subtitle.textContent = filterValue === "reports" ? "آخر البلاغات المسجلة في النظام." : "آخر البلاغات مع ملخص المواعيد بالأعلى.";
+    if (head) {
+      head.innerHTML = `
+        <tr>
+          <th>العنوان</th>
+          <th>الموقع</th>
+          <th>الحالة</th>
+          <th>الأولوية</th>
+          <th>آخر تحديث</th>
+        </tr>
+      `;
+    }
+
+    const latest = allReports.slice(0, 8);
+
+    if (!latest.length) {
+      reportsStatsPreviewBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="empty-box">لا توجد بيانات حالياً</td>
+        </tr>
+      `;
+      return;
+    }
+
+    reportsStatsPreviewBody.innerHTML = latest.map(report => `
+      <tr>
+        <td>${escapeHtml(report.title)}</td>
+        <td>${escapeHtml(report.location)}</td>
+        <td>${statusLabel(report.status)}</td>
+        <td>${priorityLabel(report.priority)}</td>
+        <td>${formatDate(report.updatedAt || report.createdAt)}</td>
+      </tr>
+    `).join("");
+  }
+
+  function openAddModal() {
+    addModalOverlay.classList.add("show");
+  }
+
+  function closeAddModal() {
+    addModalOverlay.classList.remove("show");
+    addReportForm.reset();
+  }
+
+  function openDetails(reportId, editMode = false) {
+    const report = allReports.find(r => r.id === reportId);
+    if (!report) return;
+
+    selectedReport = report;
+
+    const detailsContent = document.getElementById("detailsContent");
+    detailsContent.innerHTML = `
+      <div class="detail-box">
+        <h4>${escapeHtml(report.title)}</h4>
+        <p>${escapeHtml(report.description || "لا يوجد وصف")}</p>
+
+        <div class="image-preview-box">
+          ${report.photo ? `
+            <button class="table-action" id="showReportImageBtn" type="button">عرض الصورة</button>
+            <img class="details-image" id="reportDetailsImage" src="${report.photo}" alt="صورة البلاغ" />
+          ` : `
+            <div class="image-preview-empty">لا توجد صورة مرفقة لهذا البلاغ</div>
+          `}
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="detail-box">
+          <h4>الموقع</h4>
+          <p>${escapeHtml(report.location)}</p>
+        </div>
+        <div class="detail-box">
+          <h4>الفئة</h4>
+          <p>${escapeHtml(report.category)}</p>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="form-group">
+          <label for="detailsStatus">الحالة</label>
+          <select id="detailsStatus">
+            <option value="new" ${report.status === "new" ? "selected" : ""}>جديد</option>
+            <option value="open" ${report.status === "open" ? "selected" : ""}>مفتوح</option>
+            <option value="in_progress" ${report.status === "in_progress" ? "selected" : ""}>تحت المعالجة</option>
+            <option value="completed" ${report.status === "completed" ? "selected" : ""}>مكتمل</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="detailsPriority">الأولوية</label>
+          <select id="detailsPriority">
+            <option value="low" ${report.priority === "low" ? "selected" : ""}>منخفضة</option>
+            <option value="medium" ${report.priority === "medium" ? "selected" : ""}>متوسطة</option>
+            <option value="urgent" ${report.priority === "urgent" ? "selected" : ""}>عاجلة</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="detail-box">
+        <h4>وقت الإنشاء</h4>
+        <p>${formatDate(report.createdAt)}</p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn primary" id="saveDetailsBtn">${editMode ? "حفظ التحديثات" : "حفظ التحديثات"}</button>
+        <button class="btn secondary" id="closeDetailsInnerBtn">إغلاق</button>
+      </div>
+    `;
+
+    detailsModalOverlay.classList.add("show");
+
+    const showImageBtn = document.getElementById("showReportImageBtn");
+    const reportImage = document.getElementById("reportDetailsImage");
+
+    if (showImageBtn && reportImage) {
+      showImageBtn.addEventListener("click", () => {
+        const isVisible = reportImage.style.display === "block";
+        reportImage.style.display = isVisible ? "none" : "block";
+        showImageBtn.textContent = isVisible ? "عرض الصورة" : "إخفاء الصورة";
+      });
+    }
+
+    document.getElementById("saveDetailsBtn").addEventListener("click", saveDetailsChanges);
+    document.getElementById("closeDetailsInnerBtn").addEventListener("click", closeDetailsModal);
+  }
+
+  function closeDetailsModal() {
+    detailsModalOverlay.classList.remove("show");
+    selectedReport = null;
+  }
+
+  async function saveDetailsChanges() {
+    if (!selectedReport) return;
+
+    const newStatus = document.getElementById("detailsStatus").value;
+    const newPriority = document.getElementById("detailsPriority").value;
+
+    try {
+      await updateDoc(doc(db, "reports", selectedReport.id), {
+        status: newStatus,
+        priority: newPriority,
+        updatedAt: serverTimestamp()
+      });
+
+      closeDetailsModal();
+      showToast("تم تحديث البلاغ بنجاح");
+      await fetchReports();
+    } catch (error) {
+      console.error(error);
+      showToast("تعذر تحديث البلاغ");
+    }
+  }
+
+  async function getCoordinates(location) {
+    const queryText = `${location} السعودية`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(queryText)}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("تعذر الوصول لخدمة تحديد الموقع");
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data) || data.length === 0) {
+      throw new Error("الموقع غير واضح، اكتب المدينة والحي بشكل أوضح");
+    }
+
+    return {
+      lat: parseFloat(data[0].lat),
+      lng: parseFloat(data[0].lon)
+    };
+  }
+
+  async function handleAddReport(event) {
+    event.preventDefault();
+
+    const title = document.getElementById("reportTitle").value.trim();
+    const location = document.getElementById("reportLocation").value.trim();
+    const category = document.getElementById("reportCategory").value;
+    const priority = document.getElementById("reportPriority").value;
+    const description = document.getElementById("reportDescription").value.trim();
+
+    if (!title || !location || !description) {
+      showToast("أكمل بيانات البلاغ أولًا");
+      return;
+    }
+
+    try {
+      const coords = await getCoordinates(location);
+
+      await addDoc(reportsCollection, {
+        title,
+        description,
+        category,
+        status: "open",
+        location,
+        priority,
+        lat: coords.lat,
+        lng: coords.lng,
+        createdBy: currentUser.id || "",
+        assignedTo: "",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+
+      closeAddModal();
+      showToast("تمت إضافة البلاغ بنجاح");
+      await fetchReports();
+    } catch (error) {
+      console.error(error);
+      showToast(error.message || "تعذر حفظ البلاغ");
+    }
+  }
+
+  function escapeHtml(text) {
+    return String(text)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function scrollToReportsSection() {
+    document.getElementById("reportsStatsSection").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function getReportsByType(type) {
+    if (type === "all") return allReports;
+    if (type === "open") return allReports.filter(r => r.status === "open" || r.status === "new");
+    if (type === "in_progress") return allReports.filter(r => r.status === "in_progress");
+    if (type === "completed") return allReports.filter(r => r.status === "completed");
+    return allReports;
+  }
+
+  function getReportTypeTitle(type) {
+    if (type === "open") return "تقرير البلاغات المفتوحة";
+    if (type === "in_progress") return "تقرير البلاغات قيد المعالجة";
+    if (type === "completed") return "تقرير البلاغات المقفلة";
+    return "تقرير جميع البلاغات";
+  }
+
+  async function capturePdfContainer(container) {
+    if (!container) throw new Error("تعذر العثور على عنصر التصدير");
+
+    container.style.position = "absolute";
+    container.style.left = "-12000px";
+    container.style.top = "0";
+    container.style.right = "auto";
+    container.style.transform = "none";
+    container.style.zIndex = "0";
+    container.style.opacity = "1";
+    container.style.display = "block";
+    container.style.visibility = "visible";
+    container.style.width = "1100px";
+    container.style.maxWidth = "1100px";
+    container.style.background = "#ffffff";
+
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    return html2canvas(container, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: container.scrollWidth || 1100,
+      windowHeight: container.scrollHeight || 900
+    });
+  }
+
+  async function exportReportsPdf(type) {
+    const reports = getReportsByType(type);
+
+    if (!reports.length) {
+      showToast("لا توجد بلاغات للتصدير");
+      return;
+    }
+
+    const container = document.getElementById("pdfExportContainer");
+    const title = getReportTypeTitle(type);
+    const now = new Date().toLocaleString("ar-SA");
+    const employeeName = currentUser?.name || "موظف البلدية";
+    const total = reports.length;
+    const openCount = reports.filter(r => r.status === "open" || r.status === "new").length;
+    const progressCount = reports.filter(r => r.status === "in_progress").length;
+    const doneCount = reports.filter(r => r.status === "completed").length;
+
+    container.innerHTML = `
+      <div class="pdf-header">
+        <div>
+          <div class="pdf-title">${title}</div>
+          <div class="pdf-subtitle">
+  قطاع البلاغات البلدي<br>
+  اسم الموظف: ${employeeName}<br>
+  تاريخ التصدير: ${now}
+</div>
+        </div>
+        <div class="pdf-badge">لوحة القطاع البلدي</div>
+      </div>
+
+      <div class="pdf-summary">
+        <div class="pdf-summary-box">
+          <div class="label">كل البلاغات</div>
+          <div class="value">${total}</div>
+        </div>
+        <div class="pdf-summary-box">
+          <div class="label">المفتوحة</div>
+          <div class="value">${openCount}</div>
+        </div>
+        <div class="pdf-summary-box">
+          <div class="label">قيد المعالجة</div>
+          <div class="value">${progressCount}</div>
+        </div>
+        <div class="pdf-summary-box">
+          <div class="label">المقفلة</div>
+          <div class="value">${doneCount}</div>
+        </div>
+      </div>
+
+      <table class="pdf-table">
+        <thead>
+          <tr>
+            <th>الرقم</th>
+            <th>عنوان البلاغ</th>
+            <th>الموقع</th>
+            <th>الحالة</th>
+            <th>الأولوية</th>
+            <th>آخر تحديث</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${reports.map((report, index) => `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${escapeHtml(report.title)}</td>
+              <td>${escapeHtml(report.location)}</td>
+              <td>${statusLabel(report.status)}</td>
+              <td>${priorityLabel(report.priority)}</td>
+              <td>${formatDate(report.updatedAt || report.createdAt)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+
+    try {
+      const canvas = await capturePdfContainer(container);
+
+      const imgData = canvas.toDataURL("image/png");
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = pageWidth - 10;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 5;
+
+      pdf.addImage(imgData, "PNG", 5, position, imgWidth, imgHeight);
+      heightLeft -= (pageHeight - 10);
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + 5;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 5, position, imgWidth, imgHeight);
+        heightLeft -= (pageHeight - 10);
+      }
+
+      const fileNameMap = {
+        all: "all_reports.pdf",
+        open: "open_reports.pdf",
+        in_progress: "in_progress_reports.pdf",
+        completed: "closed_reports.pdf"
+      };
+
+      pdf.save(fileNameMap[type] || "reports.pdf");
+      showToast("تم تصدير التقرير PDF");
+    } catch (error) {
+      console.error(error);
+      showToast("تعذر تصدير PDF");
+    }
+  }
+
+
+  async function exportAppointmentsPdf() {
+    if (!allAppointments.length) {
+      await fetchAppointments();
+    }
+
+    if (!allAppointments.length) {
+      showToast("لا توجد مواعيد بلدية للتصدير");
+      return;
+    }
+
+    const container = document.getElementById("pdfExportContainer");
+    const now = new Date().toLocaleString("ar-SA");
+    const employeeName = currentUserName || "موظف البلدية";
+    const total = allAppointments.length;
+    const newCount = allAppointments.filter(a => a.status === "new" || a.status === "pending").length;
+    const confirmedCount = allAppointments.filter(a => a.status === "confirmed" || a.status === "approved").length;
+    const doneCount = allAppointments.filter(a => a.status === "completed" || a.status === "done").length;
+
+    container.innerHTML = `
+      <div class="pdf-header">
+        <div>
+          <div class="pdf-title">تقرير المواعيد البلدية</div>
+          <div class="pdf-subtitle">
+            قطاع البلاغات البلدي<br>
+            اسم الموظف: ${escapeHtml(employeeName)}<br>
+            تاريخ التصدير: ${now}
+          </div>
+        </div>
+        <div class="pdf-badge">لوحة القطاع البلدي</div>
+      </div>
+
+      <div class="pdf-summary">
+        <div class="pdf-summary-box">
+          <div class="label">كل المواعيد</div>
+          <div class="value">${total}</div>
+        </div>
+        <div class="pdf-summary-box">
+          <div class="label">الجديدة</div>
+          <div class="value">${newCount}</div>
+        </div>
+        <div class="pdf-summary-box">
+          <div class="label">المؤكدة</div>
+          <div class="value">${confirmedCount}</div>
+        </div>
+        <div class="pdf-summary-box">
+          <div class="label">المكتملة</div>
+          <div class="value">${doneCount}</div>
+        </div>
+      </div>
+
+      <table class="pdf-table">
+        <thead>
+          <tr>
+            <th>الرقم</th>
+            <th>نوع الخدمة</th>
+            <th>الجهة</th>
+            <th>التاريخ</th>
+            <th>الوقت</th>
+            <th>الحالة</th>
+            <th>اسم المستفيد</th>
+            <th>رقم الجوال</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${allAppointments.map((appointment, index) => `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${escapeHtml(appointment.serviceType)}</td>
+              <td>${escapeHtml(appointment.clinicName)}</td>
+              <td>${formatDate(appointment.date)}</td>
+              <td>${escapeHtml(appointment.time)}</td>
+              <td>${appointmentStatusLabel(appointment.status)}</td>
+              <td>${escapeHtml(appointment.displayName)}</td>
+              <td>${escapeHtml(appointment.phoneNumber)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+
+    try {
+      const canvas = await capturePdfContainer(container);
+
+      const imgData = canvas.toDataURL("image/png");
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth - 10;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 5;
+
+      pdf.addImage(imgData, "PNG", 5, position, imgWidth, imgHeight);
+      heightLeft -= (pageHeight - 10);
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + 5;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 5, position, imgWidth, imgHeight);
+        heightLeft -= (pageHeight - 10);
+      }
+
+      pdf.save("balady_appointments.pdf");
+      showToast("تم تصدير المواعيد PDF");
+    } catch (error) {
+      console.error(error);
+      showToast("تعذر تصدير المواعيد");
+    }
+  }
+
+
+  window.openAppointmentActionModal = openAppointmentActionModal;
+  window.approveAppointment = approveAppointment;
+  window.rejectAppointment = rejectAppointment;
+
+  closeAppointmentModal?.addEventListener("click", closeAppointmentActionModal);
+  cancelAppointmentModal?.addEventListener("click", closeAppointmentActionModal);
+  appointmentModalOverlay?.addEventListener("click", (event) => {
+    if (event.target === appointmentModalOverlay) closeAppointmentActionModal();
+  });
+  // يتم ربط أزرار الاعتماد والرفض داخل openAppointmentActionModal حتى تستخدم رقم الموعد الصحيح.
+
+  document.getElementById("addReportBtn").addEventListener("click", openAddModal);
+  document.getElementById("closeAddModal").addEventListener("click", closeAddModal);
+  document.getElementById("cancelAddModal").addEventListener("click", closeAddModal);
+  document.getElementById("closeDetailsModal").addEventListener("click", closeDetailsModal);
+  addReportForm.addEventListener("submit", handleAddReport);
+  document.getElementById("refreshBtn").addEventListener("click", async () => {
+    await fetchReports();
+    await fetchAppointments();
+  });
+
+  document.getElementById("showMapFakeBtn").addEventListener("click", () => {
+    window.location.href = "Login/map.html";
+  });
+
+  document.getElementById("openMapBtn").addEventListener("click", () => {
+    window.location.href = "Login/map.html";
+  });
+
+  document.getElementById("openReportsPage").addEventListener("click", scrollToReportsSection);
+
+  document.getElementById("openLatestDetails").addEventListener("click", () => {
+    if (allReports.length > 0) {
+      openDetails(allReports[0].id, false);
+    } else {
+      showToast("لا توجد بلاغات حالياً");
+    }
+  });
+
+  document.getElementById("exportAllBtn").addEventListener("click", () => exportReportsPdf("all"));
+  document.getElementById("exportOpenBtn").addEventListener("click", () => exportReportsPdf("open"));
+  document.getElementById("exportProgressBtn").addEventListener("click", () => exportReportsPdf("in_progress"));
+  document.getElementById("exportClosedBtn").addEventListener("click", () => exportReportsPdf("completed"));
+  document.getElementById("exportAppointmentsBtn").addEventListener("click", exportAppointmentsPdf);
+
+  document.querySelectorAll("[data-scroll]").forEach(item => {
+    item.addEventListener("click", () => {
+      const target = document.getElementById(item.dataset.scroll);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  searchInput.addEventListener("input", applyFilters);
+  statusFilter.addEventListener("change", applyFilters);
+  priorityFilter.addEventListener("change", applyFilters);
+  locationFilter.addEventListener("change", applyFilters);
+
+  const statsTypeFilter = document.getElementById("statsTypeFilter");
+  if (statsTypeFilter) {
+    statsTypeFilter.addEventListener("change", applyStatsTypeFilter);
+  }
+
+  clearFiltersBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    statusFilter.value = "";
+    priorityFilter.value = "";
+    locationFilter.value = "";
+    applyFilters();
+  });
+
+  addModalOverlay.addEventListener("click", (e) => {
+    if (e.target === addModalOverlay) closeAddModal();
+  });
+
+  detailsModalOverlay.addEventListener("click", (e) => {
+    if (e.target === detailsModalOverlay) closeDetailsModal();
+  });
+
+  fetchReports();
+  fetchAppointments();
+
+setInterval(() => {
+  fetchReports();
+  fetchAppointments();
+}, 500000);</script>
+
+<script>
+(function(){
+  const btn = document.querySelector('.mobile-menu-btn');
+  const overlay = document.querySelector('.mobile-overlay');
+  const navLinks = document.querySelectorAll('.sidebar a, .sidebar button, .nav-item');
+
+  function closeMenu(){
+    document.body.classList.remove('menu-open');
+    if(btn) btn.setAttribute('aria-expanded','false');
+  }
+
+  if(btn){
+    btn.addEventListener('click', function(){
+      const opened = document.body.classList.toggle('menu-open');
+      btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
+    });
+  }
+
+  if(overlay){
+    overlay.addEventListener('click', closeMenu);
+  }
+
+  navLinks.forEach(function(item){
+    item.addEventListener('click', function(){
+      if(window.innerWidth <= 900) closeMenu();
+    });
+  });
+})();
+</script>
+<script>
+  const menuBtn = document.querySelector(".mobile-menu");
+  const sidebar = document.querySelector(".sidebar");
+  const overlay = document.querySelector(".overlay");
+  
+  menuBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("show");
+  });
+  
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("show");
+  });
+  </script>
+</body>
+</html>

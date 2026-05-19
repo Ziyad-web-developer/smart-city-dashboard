@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تواصل معنا</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Tajawal',sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:#eef3f1;
+}
+
+.page{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+/* اليسار */
+.left{
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:35px;
+}
+
+.box{
+  width:100%;
+  max-width:520px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:22px;
+  color:#0d6f36;
+  font-size:20px;
+}
+
+.shield{
+  width:52px;
+  height:52px;
+  border-radius:16px;
+  background:#e8f7ee;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+}
+
+.desc{
+  color:#6b7c71;
+  line-height:1.8;
+  margin-bottom:24px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid #dcebe1;
+  border-radius:16px;
+  padding:14px;
+  text-align:center;
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.card h3{
+  font-size:14px;
+  color:#162217;
+  margin-bottom:7px;
+}
+
+.card p{
+  font-size:12px;
+  color:#118a43;
+  direction:ltr;
+}
+
+.card a{
+  display:inline-block;
+  margin-top:8px;
+  padding:7px 12px;
+  border-radius:999px;
+  background:#118a43;
+  color:#fff;
+  font-size:12px;
+  text-decoration:none;
+}
+
+.card a:hover{
+  background:#0d6f36;
+}
+
+/* زر الرجوع */
+.back-link{
+  margin-top:20px;
+  text-align:center;
+}
+
+.back-link a{
+  text-decoration:none;
+  color:#0d6f36;
+  font-size:14px;
+}
+
+/* اليمين الأخضر */
+.right{
+  background:
+    linear-gradient(180deg, rgba(21,148,71,.88), rgba(13,111,54,.95)),
+    url("https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1600&auto=format&fit=crop");
+  background-size:cover;
+  background-position:center;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:30px;
+}
+
+/* العنوان (نزلناه فقط) */
+.green-title{
+  font-size:28px;
+  text-align:center;
+  margin-top:260px; /* 👈 التعديل الوحيد */
+  font-weight:600; /* 👈 بولد */
+
+}
+.back-btn{
+  display:inline-block;
+  padding:10px 18px;
+
+  background:rgba(17,138,67,0.15); /* 👈 شفاف */
+  color:#0d6f36;
+
+  border:1px solid rgba(17,138,67,0.3);
+  border-radius:999px;
+
+  text-decoration:none;
+  font-size:14px;
+  font-weight:700;
+
+  backdrop-filter:blur(6px);
+  transition:.2s;
+}
+
+.back-btn:hover{
+  background:rgba(17,138,67,0.3); /* يزيد شوي عند الهوفر */
+}
+
+/* الفوتر */
+.copyright{
+  font-size:13px;
+  opacity:.9;
+  text-align:center;
+}
+
+@media(max-width:850px){
+  .page{
+    grid-template-columns:1fr;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>
+  <link rel="stylesheet" href="responsive.css">
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- اليسار -->
+  <section class="left">
+    <div class="box">
+
+      <div class="brand">
+        <div class="shield">🛡</div>
+        <div>
+          <b>البوابة</b><br>
+          الموحدة
+        </div>
+      </div>
+
+      <p class="desc">
+        يمكنك التواصل مع فريق المشروع مباشرة عبر البريد الإلكتروني.
+      </p>
+
+      <div class="grid">
+
+       
+
+        <div class="card">
+          <h3>Ziyad Hadi Alfifi</h3>
+          <p>202302818@stu.jazanu.edu.sa</p>
+          <a href="mailto:202302818@stu.jazanu.edu.sa">تواصل</a>
+        </div>
+
+       
+
+      </div>
+
+      <div class="back-link">
+        <a href="./Login/login.html" class="back-btn">العودة لتسجيل الدخول</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- الأخضر -->
+  <section class="right">
+
+    <div class="green-title">
+      تواصل معنا
+    </div>
+
+    <div class="copyright">
+      جميع الحقوق محفوظة © 2026 - البوابة الموحدة
+    </div>
+
+  </section>
+
+</div>
+
+</body>
+</html>

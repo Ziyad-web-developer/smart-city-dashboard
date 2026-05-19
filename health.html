@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة قسم الصحة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:'Tajawal',sans-serif;
+    }
+
+    :root{
+      --primary:#118a43;
+      --primary-dark:#0d6f36;
+      --primary-soft:#e8f7ee;
+      --bg:#f3f6f5;
+      --card:#ffffff;
+      --text:#162217;
+      --muted:#6b7c71;
+      --line:#e3ebe5;
+      --warning-bg:#fff3d6;
+      --warning-text:#9a6700;
+      --success-bg:#e3f7e8;
+      --success-text:#18794e;
+      --danger-bg:#ffe3e0;
+      --danger-text:#c03221;
+      --shadow:0 10px 30px rgba(15, 23, 42, 0.06);
+      --radius-xl:26px;
+      --radius-lg:20px;
+      --radius-md:16px;
+    }
+
+    html, body{
+      min-height:100%;
+      width:100%;
+      overflow-x:hidden;
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .layout{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:250px minmax(0,1fr);
+      width:100%;
+      max-width:100vw;
+      overflow-x:hidden;
+    }
+
+    /* ===== Sidebar نفس تصميم بلدي ===== */
+    .sidebar{
+      background:linear-gradient(180deg, #159447 0%, #0f7d3c 100%);
+      color:#fff;
+      padding:20px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      position:fixed;
+      top:0;
+      right:0;
+      bottom:0;
+      width:250px;
+      height:100vh;
+      min-height:100vh;
+      overflow-y:auto;
+      z-index:90;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:6px;
+    }
+
+    .brand-logo{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      background:rgba(255,255,255,.16);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      font-weight:800;
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(4px);
+      flex-shrink:0;
+    }
+
+    .brand-text h1{
+      font-size:22px;
+      font-weight:800;
+      line-height:1.25;
+    }
+
+    .brand-text p{
+      font-size:13px;
+      opacity:.9;
+      margin-top:4px;
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:4px;
+    }
+
+    .nav a{
+      text-decoration:none;
+      color:#fff;
+      display:block;
+      padding:12px 14px;
+      border-radius:16px;
+      transition:.2s ease;
+      font-size:15px;
+      font-weight:600;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
+      cursor:pointer;
+    }
+
+    .nav a:hover{
+      background:rgba(255,255,255,.16);
+    }
+
+    .nav a.active{
+      background:#fff;
+      color:var(--primary-dark);
+      border-color:#fff;
+    }
+
+    .logout-btn{
+      margin-top:auto;
+      border:none;
+      border-radius:18px;
+      padding:15px 16px;
+      background:#fff;
+      color:var(--primary-dark);
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .main{
+      grid-column:2;
+      width:100%;
+      max-width:980px;
+      margin:0 auto;
+      padding:18px 14px 28px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      overflow-x:hidden;
+    }
+
+    .welcome-header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:rgba(255,255,255,.94);
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      padding:16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      backdrop-filter:blur(8px);
+    }
+
+    .welcome-text{
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+    }
+
+    .welcome-text span{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .welcome-text h2{
+      color:var(--primary-dark);
+      font-size:24px;
+      font-weight:800;
+      margin:0;
+    }
+
+    .welcome-badge,
+    .top-pill{
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      border:1px solid #cce8d5;
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:13px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .topbar-left h1{
+      font-size:28px;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .topbar-left p{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .grid-stats{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .stat-card,
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .stat-card{
+      padding:16px;
+    }
+
+    .stat-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:12px;
+    }
+
+    .stat-title{
+      font-size:15px;
+      color:#4b5c52;
+      font-weight:700;
+    }
+
+    .stat-badge{
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      background:var(--primary-soft);
+    }
+
+    .stat-number{
+      font-size:28px;
+      font-weight:800;
+      color:var(--primary-dark);
+      margin-bottom:4px;
+    }
+
+    .stat-note{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .panel{
+      padding:16px;
+      overflow:hidden;
+    }
+
+    .panel-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .panel-header h3{
+      font-size:22px;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .panel-header p{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:11px 14px;
+      background:var(--primary);
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .btn:hover{
+      background:var(--primary-dark);
+    }
+
+    .btn-outline,
+    .btn.secondary{
+      background:#f6faf7;
+      color:var(--primary-dark);
+      border:1px solid #d8e8dc;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    thead th{
+      text-align:right;
+      background:#fbfdfc;
+      color:#607166;
+      font-size:13px;
+      padding:12px 10px;
+      border-bottom:1px solid var(--line);
+      font-weight:800;
+    }
+
+    tbody td{
+      padding:12px 10px;
+      border-bottom:1px solid #edf2ee;
+      font-size:13px;
+      vertical-align:middle;
+    }
+
+    tbody tr:last-child td{
+      border-bottom:none;
+    }
+
+    .status{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+      min-width:86px;
+    }
+
+    .pending{
+      background:var(--warning-bg);
+      color:var(--warning-text);
+    }
+
+    .approved,
+    .resolved{
+      background:var(--success-bg);
+      color:var(--success-text);
+    }
+
+    .rejected,
+    .urgent{
+      background:var(--danger-bg);
+      color:var(--danger-text);
+    }
+
+    .loading-box,
+    .empty-box{
+      background:#fafcfb;
+      border:1px dashed #d9e6dd;
+      border-radius:18px;
+      padding:18px;
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .appointments-tools{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .filter-input,
+    .filter-select{
+      background:#f7faf8;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:11px 12px;
+      font-size:13px;
+      color:#425246;
+      outline:none;
+      min-width:180px;
+    }
+
+    .table-wrap{
+      width:100%;
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#fff;
+    }
+
+    .hidden-export{
+      position:fixed;
+      top:0;
+      right:0;
+      transform:translateX(200vw);
+      width:1100px;
+      max-width:1100px;
+      background:#fff;
+      color:#111;
+      padding:30px;
+      direction:rtl;
+      pointer-events:none;
+      z-index:-1;
+      font-family:'Tajawal',sans-serif;
+    }
+
+    @media (max-width:1250px){
+      .grid-stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:920px){
+      .layout{
+        display:block;
+        grid-template-columns:1fr;
+      }
+
+      .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+        min-height:auto;
+      }
+
+      .main{
+        grid-column:auto;
+        max-width:100%;
+        padding:18px;
+      }
+    }
+
+    @media (max-width:640px){
+      .grid-stats{
+        grid-template-columns:1fr;
+      }
+
+      .welcome-text h2{
+        font-size:20px;
+      }
+
+      .topbar-left h1{
+        font-size:24px;
+      }
+
+      table{
+        min-width:650px;
+      }
+    }
+  
+    .export-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .pdf-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:18px;
+      gap:20px;
+    }
+
+    .pdf-title{
+      font-size:28px;
+      font-weight:800;
+      color:#0d6f36;
+      margin-bottom:6px;
+    }
+
+    .pdf-subtitle{
+      color:#4b5c52;
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .pdf-badge{
+      background:#e8f7ee;
+      border:1px solid #cce8d5;
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:13px;
+      font-weight:800;
+      color:#0d6f36;
+      white-space:nowrap;
+    }
+
+    .pdf-summary{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .pdf-summary-box{
+      border:1px solid #e3ebe5;
+      border-radius:16px;
+      padding:14px;
+      background:#fafcfb;
+    }
+
+    .pdf-summary-box .label{
+      font-size:13px;
+      color:#6b7c71;
+      margin-bottom:8px;
+    }
+
+    .pdf-summary-box .value{
+      font-size:28px;
+      font-weight:800;
+      color:#0d6f36;
+    }
+
+    .pdf-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+    }
+
+    .pdf-table th,
+    .pdf-table td{
+      border:1px solid #e3ebe5;
+      padding:10px;
+      text-align:right;
+      vertical-align:top;
+    }
+
+    .pdf-table th{
+      background:#f6faf7;
+      color:#304034;
+      font-weight:800;
+    }
+
+  
+    .toast{
+      position:fixed;
+      left:20px;
+      bottom:20px;
+      background:#102c18;
+      color:#fff;
+      padding:14px 16px;
+      border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.2);
+      display:none;
+      z-index:1100;
+      min-width:220px;
+      max-width:360px;
+      font-size:14px;
+      font-weight:700;
+      line-height:1.8;
+    }
+
+    .toast.show{
+      display:block;
+      animation:toastIn .2s ease;
+    }
+
+    @keyframes toastIn{
+      from{opacity:0; transform:translateY(8px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+
+  
+    .welcome-text h2,
+    .welcome-text h2 span,
+    #employeeName{
+      font-size:24px !important;
+      font-weight:800 !important;
+      color:#0d6f36 !important;
+      line-height:1.4 !important;
+    }
+
+    .modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.35);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:1200;
+    }
+
+    .modal-overlay.show{
+      display:flex;
+    }
+
+    .modal{
+      width:min(520px,100%);
+      background:#fff;
+      border:1px solid #e3ebe5;
+      border-radius:26px;
+      box-shadow:0 20px 50px rgba(0,0,0,.15);
+      padding:24px;
+    }
+
+    .modal-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .modal-head h3{
+      font-size:24px;
+      font-weight:800;
+      color:#162217;
+      margin-bottom:6px;
+    }
+
+    .modal-head p{
+      color:#6b7c71;
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .close-btn{
+      border:none;
+      background:#f3f6f5;
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:20px;
+      font-weight:800;
+      color:#0d6f36;
+    }
+
+    .appointment-detail-box{
+      background:#f8fbf9;
+      border:1px solid #e3ebe5;
+      border-radius:18px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .appointment-detail-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 0;
+      border-bottom:1px solid #edf2ee;
+      font-size:14px;
+    }
+
+    .appointment-detail-row:last-child{
+      border-bottom:none;
+    }
+
+    .appointment-detail-row span{
+      color:#6b7c71;
+      font-weight:700;
+    }
+
+    .appointment-detail-row strong{
+      color:#162217;
+      font-weight:800;
+      text-align:left;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn.danger{
+      background:#c03221;
+      color:#fff;
+    }
+
+    .btn.danger:hover{
+      background:#9f281b;
+    }
+
+
+    /* ===== Add Appointment Modal ===== */
+    .add-appointment-modal{
+      width:min(560px,100%);
+      background:#fff;
+      border:1px solid #e3ebe5;
+      border-radius:28px;
+      box-shadow:0 24px 70px rgba(0,0,0,.18);
+      padding:24px;
+      animation:modalPop .2s ease;
+    }
+
+    @keyframes modalPop{
+      from{opacity:0; transform:translateY(10px) scale(.98);}
+      to{opacity:1; transform:translateY(0) scale(1);}
+    }
+
+    .add-modal-icon{
+      width:48px;
+      height:48px;
+      border-radius:18px;
+      background:var(--primary-soft);
+      color:var(--primary-dark);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      font-weight:800;
+      border:1px solid #cce8d5;
+      flex-shrink:0;
+    }
+
+    .add-form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin:16px 0 18px;
+    }
+
+    .form-group{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+
+    .form-group.full{
+      grid-column:1 / -1;
+    }
+
+    .form-group label{
+      font-size:13px;
+      font-weight:800;
+      color:#425246;
+    }
+
+    .form-group input{
+      width:100%;
+      border:1px solid var(--line);
+      background:#f8fbf9;
+      border-radius:15px;
+      padding:13px 14px;
+      color:#162217;
+      font-size:14px;
+      outline:none;
+      transition:.2s ease;
+    }
+
+    .form-group input:focus{
+      border-color:var(--primary);
+      background:#fff;
+      box-shadow:0 0 0 4px rgba(17,138,67,.10);
+    }
+
+    .add-appointment-modal .modal-actions{
+      justify-content:flex-end;
+    }
+
+    .add-appointment-modal .btn{
+      min-width:130px;
+      padding:13px 16px;
+      border-radius:16px;
+    }
+
+    @media (max-width:640px){
+      .add-form-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+  </style>
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" type="button" aria-label="فتح القائمة" aria-expanded="false"><span>☰</span></button>
+  <div class="mobile-overlay" aria-hidden="true"></div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">ص</div>
+        <div class="brand-text">
+          <h1>قسم الصحة</h1>
+          <p>إدارة المواعيد</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#" class="active">صندوق المواعيد</a>
+        <a href="#appointments">إدارة المواعيد</a>
+        <a href="#stats">إحصائيات المواعيد</a>
+      </nav>
+
+      <button class="logout-btn" id="logoutBtn">تسجيل الخروج</button>
+    </aside>
+
+    <main class="main">
+      <header class="welcome-header">
+        <div class="welcome-text">
+          <span>مرحبًا بك في لوحة قسم الصحة</span>
+          <h2>مرحبًا، <span id="employeeName">...</span></h2>
+        </div>
+        <div class="welcome-badge">استقبال المواعيد</div>
+      </header>
+
+      <div class="topbar">
+        <div class="topbar-left">
+          <h1>صندوق مواعيد الصحة</h1>
+        </div>
+        <div class="top-pill" id="todayLabel">اليوم</div>
+      </div>
+
+      <section class="grid-stats" id="stats">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-title">مواعيد اليوم</div>
+            <div class="stat-badge"></div>
+          </div>
+          <div class="stat-number" id="appointmentsTodayCount">0</div>
+          <div class="stat-note">عدد المواعيد بتاريخ اليوم</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-title">إجمالي المواعيد</div>
+            <div class="stat-badge"></div>
+          </div>
+          <div class="stat-number" id="totalAppointmentsCount">0</div>
+          <div class="stat-note">كل المواعيد المستقبلة من التطبيق</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-title">مواعيد قيد المراجعة</div>
+            <div class="stat-badge"></div>
+          </div>
+          <div class="stat-number" id="pendingAppointmentsCount">0</div>
+          <div class="stat-note">تحتاج اعتماد أو متابعة</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-title">مواعيد معتمدة</div>
+            <div class="stat-badge"></div>
+          </div>
+          <div class="stat-number" id="completedCasesCount">0</div>
+          <div class="stat-note">تم اعتمادها داخل النظام</div>
+        </div>
+      </section>
+
+      <section class="panel" id="appointments">
+        <div class="panel-header">
+          <div>
+            <h3>إدارة المواعيد</h3>
+            <p>متابعة المواعيد الصحية الواردة من التطبيق وحالة كل موعد.</p>
+          </div>
+
+          <div class="export-actions">
+            <button class="btn secondary" onclick="exportAppointmentsPdf('all')">تصدير كل المواعيد PDF</button>
+            <button class="btn" onclick="addAppointment()">+ إضافة موعد</button>
+          </div>
+        </div>
+
+        <div class="appointments-tools">
+          <input id="appointmentsSearchInput" class="filter-input" type="text" placeholder="ابحث باسم المريض أو المستشفى أو العيادة..." />
+          <select id="appointmentsStatusFilter" class="filter-select">
+            <option value="">الحالة: الكل</option>
+            <option value="pending">قيد المراجعة</option>
+            <option value="approved">مقبول</option>
+            <option value="rejected">مرفوض</option>
+          </select>
+          <button class="btn secondary" id="clearAppointmentsFilters" type="button">إعادة الضبط</button>
+          <button class="btn secondary" onclick="exportAppointmentsPdf('pending')" type="button"> تصدير قيد المراجعة</button>
+          <button class="btn secondary" onclick="exportAppointmentsPdf('approved')" type="button">تصدير المعتمدة</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم المريض</th>
+                <th>المستشفى</th>
+                <th>العيادة</th>
+                <th>التاريخ والوقت</th>
+                <th>الحالة</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="appointmentsTable">
+              <tr>
+                <td colspan="6">
+                  <div class="loading-box">جاري تحميل المواعيد...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div id="pdfExportContainer" class="hidden-export"></div>
+      <div class="toast" id="toast"></div>
+      <div class="modal-overlay" id="appointmentModalOverlay">
+        <div class="modal">
+          <div class="modal-head">
+            <div>
+              <h3>إجراء على الموعد</h3>
+              <p>اختر اعتماد أو رفض الموعد المحدد.</p>
+            </div>
+            <button class="close-btn" id="closeAppointmentModal" type="button">×</button>
+          </div>
+
+          <div class="appointment-detail-box" id="appointmentModalContent"></div>
+
+          <div class="modal-actions">
+            <button class="btn" id="approveAppointmentBtn" type="button">اعتماد الموعد</button>
+            <button class="btn danger" id="rejectAppointmentBtn" type="button">رفض الموعد</button>
+            <button class="btn secondary" id="cancelAppointmentModal" type="button">إلغاء</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-overlay" id="addAppointmentModalOverlay">
+        <div class="add-appointment-modal">
+          <div class="modal-head">
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <div class="add-modal-icon">+</div>
+              <div>
+                <h3>إضافة موعد صحي</h3>
+                <p>أدخل بيانات الموعد الجديد وسيتم حفظه داخل مواعيد الصحة.</p>
+              </div>
+            </div>
+            <button class="close-btn" id="closeAddAppointmentModal" type="button">×</button>
+          </div>
+
+          <div class="add-form-grid">
+            <div class="form-group full">
+              <label for="addPatientName">اسم المريض</label>
+              <input id="addPatientName" type="text" placeholder="مثال: عبدالرحمن العتيبي" />
+            </div>
+
+            <div class="form-group">
+              <label for="addHospitalName">المستشفى</label>
+              <input id="addHospitalName" type="text" placeholder="مثال: مستشفى الملك فهد" />
+            </div>
+
+            <div class="form-group">
+              <label for="addClinicName">العيادة</label>
+              <input id="addClinicName" type="text" placeholder="مثال: عيادة الباطنية" />
+            </div>
+
+            <div class="form-group">
+              <label for="addAppointmentDate">تاريخ الموعد</label>
+              <input id="addAppointmentDate" type="date" />
+            </div>
+
+            <div class="form-group">
+              <label for="addAppointmentTime">وقت الموعد</label>
+              <input id="addAppointmentTime" type="time" />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn secondary" id="cancelAddAppointmentModal" type="button">إلغاء</button>
+            <button class="btn" id="saveAddAppointmentBtn" type="button">حفظ الموعد</button>
+          </div>
+        </div>
+      </div>
+
+      <span id="employeeRole" style="display:none;"></span>
+      <span id="userInitial" style="display:none;"></span>
+      <span id="connectionState" style="display:none;"></span>
+      <span id="reportsCount" style="display:none;">0</span>
+      <span id="facilitiesCount" style="display:none;">0</span>
+      <span id="reportsStatsPreviewBody" style="display:none;"></span>
+      <button id="openMapBtn" style="display:none;" type="button"></button>
+      <div id="miniMap" style="display:none;"></div>
+      <div id="reportsList" style="display:none;"></div>
+    </main>
+  </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script type="module">
+    import { auth, db } from './Login/api.js';
+    import { signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import {
+      doc,
+      getDoc,
+      addDoc,
+      updateDoc,
+      collection,
+      getDocs,
+      query,
+      where,
+      orderBy,
+      serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const employeeNameEl = document.getElementById('employeeName');
+    const employeeRoleEl = document.getElementById('employeeRole');
+    const userInitialEl = document.getElementById('userInitial');
+    const connectionStateEl = document.getElementById('connectionState');
+
+    const appointmentsTodayCountEl = document.getElementById('appointmentsTodayCount');
+    const reportsCountEl = document.getElementById('reportsCount');
+    const completedCasesCountEl = document.getElementById('completedCasesCount');
+    const facilitiesCountEl = document.getElementById('facilitiesCount');
+
+    const appointmentsTable = document.getElementById('appointmentsTable');
+    const reportsList = document.getElementById('reportsList');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const openMapBtn = document.getElementById('openMapBtn');
+    const miniMapEl = document.getElementById('miniMap');
+    const reportsStatsPreviewBody = document.getElementById('reportsStatsPreviewBody');
+    const toast = document.getElementById('toast');
+    const appointmentModalOverlay = document.getElementById('appointmentModalOverlay');
+    const appointmentModalContent = document.getElementById('appointmentModalContent');
+    const closeAppointmentModal = document.getElementById('closeAppointmentModal');
+    const cancelAppointmentModal = document.getElementById('cancelAppointmentModal');
+    const approveAppointmentBtn = document.getElementById('approveAppointmentBtn');
+    const rejectAppointmentBtn = document.getElementById('rejectAppointmentBtn');
+    const addAppointmentModalOverlay = document.getElementById('addAppointmentModalOverlay');
+    const closeAddAppointmentModal = document.getElementById('closeAddAppointmentModal');
+    const cancelAddAppointmentModal = document.getElementById('cancelAddAppointmentModal');
+    const saveAddAppointmentBtn = document.getElementById('saveAddAppointmentBtn');
+    const addPatientNameInput = document.getElementById('addPatientName');
+    const addHospitalNameInput = document.getElementById('addHospitalName');
+    const addClinicNameInput = document.getElementById('addClinicName');
+    const addAppointmentDateInput = document.getElementById('addAppointmentDate');
+    const addAppointmentTimeInput = document.getElementById('addAppointmentTime');
+    let selectedAppointmentId = null;
+
+    let currentUser = null;
+    let currentUserProfile = null;
+    let appointmentsCache = [];
+    let reportsCache = [];
+    let facilitiesCache = [];
+
+    let miniMap = null;
+    let miniLayer = null;
+
+    const HEALTH_ROLE_VALUES = ['health', 'healthy', 'health_employee', 'صحة', 'موظف صحة'];
+
+    function normalizeRole(role) {
+      return String(role || '').trim().toLowerCase();
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+
+    function showToast(message) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2600);
+    }
+
+    function todayString() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatDate(value) {
+      if (!value) return '-';
+      if (typeof value === 'string') return value;
+      if (value?.toDate) {
+        const d = value.toDate();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+      return '-';
+    }
+
+
+    function getAppointmentDateRaw(item) {
+      return item?.appointment_date || item?.appointmentDate || item?.date || item?.created_time || item?.createdAt || item?.created_at || null;
+    }
+
+    function getAppointmentTime(item) {
+      return item?.appointment_time || item?.appointmentTime || item?.time || item?.hour || 'غير محدد';
+    }
+
+    function getPatientNameFromAppointment(item) {
+      return (
+        item?.display_name ||
+        item?.displayName ||
+        'بدون اسم'
+      );
+    }
+
+    function getHospitalNameFromAppointment(item) {
+      return (
+        item?.health_center_name ||
+        item?.healthCenterName ||
+        item?.hospital_name ||
+        item?.hospitalName ||
+        item?.facility_name ||
+        item?.facilityName ||
+        item?.center_name ||
+        item?.centerName ||
+        'غير محدد'
+      );
+    }
+
+    function getClinicNameFromAppointment(item) {
+      return (
+        item?.clinic_name ||
+        item?.clinicName ||
+        'غير محدد'
+      );
+    }
+
+    function getMillisForSort(value) {
+      if (!value) return 0;
+      if (value?.toDate) return value.toDate().getTime();
+      const parsed = new Date(value).getTime();
+      return Number.isNaN(parsed) ? 0 : parsed;
+    }
+
+    function getStatusInfo(status) {
+      const normalized = String(status || '').trim().toLowerCase();
+
+      if (['approved', 'accepted', 'مقبول', 'تمت الموافقة'].includes(normalized)) {
+        return { text: 'مقبول', className: 'status approved' };
+      }
+      if (['rejected', 'declined', 'مرفوض'].includes(normalized)) {
+        return { text: 'مرفوض', className: 'status rejected' };
+      }
+      if (['resolved', 'closed', 'done', 'completed', 'تم الحل', 'مكتمل'].includes(normalized)) {
+        return { text: 'تم الحل', className: 'status resolved' };
+      }
+      if (['urgent', 'high', 'عاجل'].includes(normalized)) {
+        return { text: 'عاجل', className: 'status urgent' };
+      }
+
+      return { text: 'قيد المراجعة', className: 'status pending' };
+    }
+
+    function getStoredPortalUser() {
+      const saved =
+        localStorage.getItem('portalUser') ||
+        sessionStorage.getItem('portalUser') ||
+        localStorage.getItem('portalPendingAuth') ||
+        sessionStorage.getItem('portalPendingAuth');
+
+      if (!saved) return null;
+
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return null;
+      }
+    }
+
+    function setUserUI(profile) {
+      const name = profile?.fullName || profile?.name || currentUser?.fullName || currentUser?.username || 'مستخدم';
+      const role = profile?.role || 'موظف صحة';
+      employeeNameEl.textContent = name;
+      employeeRoleEl.textContent = role === 'health' ? 'موظف صحة' : role;
+      userInitialEl.textContent = String(name).trim().charAt(0) || 'م';
+      connectionStateEl.textContent = 'متصل الآن';
+    }
+
+    function initMiniMap() { return; }
+
+    function renderAppointments() {
+      const searchValue = String(document.getElementById('appointmentsSearchInput')?.value || '').trim().toLowerCase();
+      const statusValue = String(document.getElementById('appointmentsStatusFilter')?.value || '').trim().toLowerCase();
+
+      const visibleAppointments = appointmentsCache.filter(item => {
+        const patientName = String(getPatientNameFromAppointment(item)).toLowerCase();
+        const hospitalName = String(getHospitalNameFromAppointment(item)).toLowerCase();
+        const clinicName = String(getClinicNameFromAppointment(item)).toLowerCase();
+        const appointmentTime = String(getAppointmentTime(item)).toLowerCase();
+        const normalizedStatus = getAppointmentNormalizedStatus(item);
+
+        const matchesSearch = !searchValue ||
+          patientName.includes(searchValue) ||
+          hospitalName.includes(searchValue) ||
+          clinicName.includes(searchValue) ||
+          appointmentTime.includes(searchValue);
+
+        const matchesStatus = !statusValue || normalizedStatus === statusValue;
+
+        return matchesSearch && matchesStatus;
+      });
+
+      if (!visibleAppointments.length) {
+        appointmentsTable.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="empty-box">لا توجد مواعيد مطابقة حالياً</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      appointmentsTable.innerHTML = visibleAppointments.map(item => {
+        const patientName = getPatientNameFromAppointment(item);
+        const hospitalName = getHospitalNameFromAppointment(item);
+        const clinicName = getClinicNameFromAppointment(item);
+        const appointmentDate = formatDate(getAppointmentDateRaw(item));
+        const appointmentTime = getAppointmentTime(item);
+        const statusInfo = getStatusInfo(item.status);
+
+        return `
+          <tr>
+            <td>${escapeHtml(patientName)}</td>
+            <td>${escapeHtml(hospitalName)}</td>
+            <td>${escapeHtml(clinicName)}</td>
+            <td>${escapeHtml(appointmentDate)} - ${escapeHtml(appointmentTime)}</td>
+            <td><span class="${statusInfo.className}">${statusInfo.text}</span></td>
+            <td>
+              <button class="btn btn-outline" onclick="openAppointmentActionModal('${item.id}')">عرض</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderReports() { return; }
+
+    function renderMapPins() { return; }
+
+    function updateStats() {
+      const today = todayString();
+      const appointmentsToday = appointmentsCache.filter(item => formatDate(getAppointmentDateRaw(item)) === today).length;
+      const totalAppointments = appointmentsCache.length;
+      const pendingAppointments = appointmentsCache.filter(item => getAppointmentNormalizedStatus(item) === 'pending').length;
+      const approvedAppointments = appointmentsCache.filter(item => getAppointmentNormalizedStatus(item) === 'approved').length;
+
+      appointmentsTodayCountEl.textContent = appointmentsToday;
+      completedCasesCountEl.textContent = approvedAppointments;
+
+      const totalAppointmentsCountEl = document.getElementById('totalAppointmentsCount');
+      const pendingAppointmentsCountEl = document.getElementById('pendingAppointmentsCount');
+
+      if (totalAppointmentsCountEl) totalAppointmentsCountEl.textContent = totalAppointments;
+      if (pendingAppointmentsCountEl) pendingAppointmentsCountEl.textContent = pendingAppointments;
+
+      if (reportsCountEl) reportsCountEl.textContent = 0;
+      if (facilitiesCountEl) facilitiesCountEl.textContent = 0;
+    }
+
+    async function fetchUserProfile(uid) {
+      const userRef = doc(db, 'users', uid);
+      const snapshot = await getDoc(userRef);
+      if (!snapshot.exists()) throw new Error('لم يتم العثور على ملف المستخدم في users');
+      return { id: snapshot.id, ...snapshot.data() };
+    }
+
+    async function fetchAppointments() {
+      try {
+        const snapshot = await getDocs(collection(db, 'appointments'));
+
+        appointmentsCache = await Promise.all(
+          snapshot.docs.map(async (docItem) => {
+            const data = docItem.data();
+
+            let userData = null;
+            const userRef = data.user_ref || data.userRef || null;
+
+            if (userRef) {
+              try {
+                if (typeof userRef === 'string') {
+                  const cleanedPath = userRef.replace(/^\/+|\/+$/g, '');
+                  const parts = cleanedPath.split('/').filter(Boolean);
+
+                  if (parts.length >= 2) {
+                    const userSnap = await getDoc(doc(db, parts[0], parts[1]));
+                    if (userSnap.exists()) userData = userSnap.data();
+                  } else {
+                    const userSnap = await getDoc(doc(db, 'users', cleanedPath));
+                    if (userSnap.exists()) userData = userSnap.data();
+                  }
+                } else {
+                  const userSnap = await getDoc(userRef);
+                  if (userSnap.exists()) userData = userSnap.data();
+                }
+              } catch (error) {
+                console.warn('تعذر جلب بيانات المستخدم للموعد:', docItem.id, error);
+              }
+            }
+
+            const appointment = {
+              id: docItem.id,
+              ...data,
+              display_name: userData?.display_name || userData?.displayName || data.display_name || data.displayName || '',
+              fullName: data.fullName || userData?.fullName || userData?.name || '',
+              email: data.email || userData?.email || '',
+              phone_number: data.phone_number || data.phoneNumber || userData?.phone_number || userData?.phoneNumber || '',
+              patient_name: userData?.display_name || userData?.displayName || data.display_name || data.displayName || 'بدون اسم',
+              hospital_name:
+                data.health_center_name ||
+                data.healthCenterName ||
+                data.hospital_name ||
+                data.hospitalName ||
+                data.facility_name ||
+                data.facilityName ||
+                'غير محدد',
+              clinic_name:
+                data.clinic_name ||
+                data.clinicName ||
+                'غير محدد',
+              appointment_date: getAppointmentDateRaw(data),
+              appointment_time: getAppointmentTime(data),
+              status: data.status || 'pending'
+            };
+
+            return appointment;
+          })
+        );
+
+        appointmentsCache.sort((a, b) => getMillisForSort(getAppointmentDateRaw(b)) - getMillisForSort(getAppointmentDateRaw(a)));
+
+        renderAppointments();
+        updateStats();
+      } catch (error) {
+        console.error('خطأ تحميل المواعيد:', error);
+        appointmentsCache = [];
+        appointmentsTable.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="empty-box">تعذر تحميل المواعيد: ${escapeHtml(error.message || 'خطأ غير معروف')}</div>
+            </td>
+          </tr>
+        `;
+        updateStats();
+      }
+    }
+
+    async function fetchReports() { reportsCache = []; updateStats(); }
+
+    async function fetchFacilities() { facilitiesCache = []; updateStats(); }
+
+    async function loadDashboardData() {
+      await fetchAppointments();
+    }
+
+
+    function openAppointmentActionModal(appointmentId) {
+      const item = appointmentsCache.find(app => app.id === appointmentId);
+
+      if (!item || !appointmentModalOverlay || !appointmentModalContent) return;
+
+      selectedAppointmentId = appointmentId;
+
+      const patientName = getPatientNameFromAppointment(item);
+      const hospitalName = getHospitalNameFromAppointment(item);
+      const clinicName = getClinicNameFromAppointment(item);
+      const appointmentDate = formatDate(getAppointmentDateRaw(item));
+      const appointmentTime = getAppointmentTime(item);
+      const statusInfo = getStatusInfo(item.status);
+
+      appointmentModalContent.innerHTML = `
+        <div class="appointment-detail-row">
+          <span>اسم المريض</span>
+          <strong>${escapeHtml(patientName)}</strong>
+        </div>
+        <div class="appointment-detail-row">
+          <span>المستشفى</span>
+          <strong>${escapeHtml(hospitalName)}</strong>
+        </div>
+        <div class="appointment-detail-row">
+          <span>العيادة</span>
+          <strong>${escapeHtml(clinicName)}</strong>
+        </div>
+        <div class="appointment-detail-row">
+          <span>التاريخ</span>
+          <strong>${escapeHtml(appointmentDate)}</strong>
+        </div>
+        <div class="appointment-detail-row">
+          <span>الوقت</span>
+          <strong>${escapeHtml(appointmentTime)}</strong>
+        </div>
+        <div class="appointment-detail-row">
+          <span>الحالة الحالية</span>
+          <strong>${escapeHtml(statusInfo.text)}</strong>
+        </div>
+      `;
+
+      const normalizedStatus = String(item.status || 'pending').trim().toLowerCase();
+      const isPending = getStatusInfo(normalizedStatus).className.includes('pending');
+
+      approveAppointmentBtn.disabled = !isPending;
+      rejectAppointmentBtn.disabled = !isPending;
+
+      approveAppointmentBtn.style.opacity = isPending ? '1' : '.55';
+      rejectAppointmentBtn.style.opacity = isPending ? '1' : '.55';
+
+      appointmentModalOverlay.classList.add('show');
+    }
+
+    function closeAppointmentActionModal() {
+      selectedAppointmentId = null;
+      appointmentModalOverlay?.classList.remove('show');
+    }
+
+    async function rejectAppointment(appointmentId) {
+      try {
+        await updateDoc(doc(db, 'appointments', appointmentId), {
+          status: 'rejected',
+          updatedAt: serverTimestamp(),
+          rejectedBy: currentUser?.id || currentUser?.uid || ''
+        });
+
+        const item = appointmentsCache.find(app => app.id === appointmentId);
+        if (item) item.status = 'rejected';
+
+        renderAppointments();
+        updateStats();
+        closeAppointmentActionModal();
+        showToast('تم رفض الموعد بنجاح');
+      } catch (error) {
+        console.error(error);
+        showToast('تعذر رفض الموعد');
+      }
+    }
+
+    async function approveAppointment(appointmentId) {
+      try {
+        await updateDoc(doc(db, 'appointments', appointmentId), {
+          status: 'approved',
+          updatedAt: serverTimestamp(),
+          approvedBy: currentUser?.id || currentUser?.uid || ''
+        });
+
+        const item = appointmentsCache.find(app => app.id === appointmentId);
+        if (item) item.status = 'approved';
+        renderAppointments();
+        updateStats();
+        closeAppointmentActionModal();
+        showToast('تم اعتماد الموعد بنجاح');
+      } catch (error) {
+        console.error(error);
+        showToast('تعذر اعتماد الموعد');
+      }
+    }
+
+    function openAddAppointmentModal() {
+      if (!currentUser) {
+        showToast('يجب تسجيل الدخول أولاً');
+        return;
+      }
+
+      if (addPatientNameInput) addPatientNameInput.value = '';
+      if (addHospitalNameInput) addHospitalNameInput.value = '';
+      if (addClinicNameInput) addClinicNameInput.value = '';
+      if (addAppointmentDateInput) addAppointmentDateInput.value = todayString();
+      if (addAppointmentTimeInput) addAppointmentTimeInput.value = '';
+
+      addAppointmentModalOverlay?.classList.add('show');
+      setTimeout(() => addPatientNameInput?.focus(), 80);
+    }
+
+    function closeAddAppointmentModalBox() {
+      addAppointmentModalOverlay?.classList.remove('show');
+    }
+
+    async function saveManualAppointment() {
+      if (!currentUser) return showToast('يجب تسجيل الدخول أولاً');
+
+      const patientName = String(addPatientNameInput?.value || '').trim();
+      const hospitalName = String(addHospitalNameInput?.value || '').trim();
+      const clinicName = String(addClinicNameInput?.value || '').trim();
+      const date = String(addAppointmentDateInput?.value || '').trim();
+      const time = String(addAppointmentTimeInput?.value || '').trim();
+
+      if (!patientName) return showToast('أدخل اسم المريض');
+      if (!hospitalName) return showToast('أدخل اسم المستشفى');
+      if (!clinicName) return showToast('أدخل اسم العيادة');
+      if (!date) return showToast('اختر تاريخ الموعد');
+      if (!time) return showToast('اختر وقت الموعد');
+
+      try {
+        saveAddAppointmentBtn.disabled = true;
+        saveAddAppointmentBtn.textContent = 'جاري الحفظ...';
+
+        const payload = {
+          patient_name: patientName,
+          display_name: patientName,
+          hospital_name: hospitalName,
+          clinic_name: clinicName,
+          appointment_date: date,
+          appointment_time: time,
+          date,
+          time,
+          status: 'pending',
+          department: 'health',
+          createdBy: currentUser.id || currentUser.uid,
+          createdByName: currentUserProfile?.fullName || currentUserProfile?.name || currentUser?.fullName || currentUser?.username || 'مستخدم',
+          createdAt: serverTimestamp()
+        };
+
+        const ref = await addDoc(collection(db, 'appointments'), payload);
+        appointmentsCache.unshift({ id: ref.id, ...payload });
+        renderAppointments();
+        updateStats();
+        closeAddAppointmentModalBox();
+        showToast('تمت إضافة الموعد بنجاح');
+      } catch (error) {
+        console.error(error);
+        showToast('تعذر إضافة الموعد');
+      } finally {
+        saveAddAppointmentBtn.disabled = false;
+        saveAddAppointmentBtn.textContent = 'حفظ الموعد';
+      }
+    }
+
+    function addAppointment() {
+      openAddAppointmentModal();
+    }
+
+    async function getCoordinates(location) {
+      const queryText = `${location} السعودية`;
+      const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(queryText)}`;
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: { Accept: 'application/json' }
+      });
+
+      if (!response.ok) {
+        throw new Error('تعذر الوصول لخدمة تحديد الموقع');
+      }
+
+      const data = await response.json();
+
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('الموقع غير واضح، اكتب المدينة والحي بشكل أوضح');
+      }
+
+      return {
+        lat: parseFloat(data[0].lat),
+        lng: parseFloat(data[0].lon)
+      };
+    }
+
+    async function addReport() {
+      if (!currentUser) return showToast('يجب تسجيل الدخول أولاً');
+
+      const title = prompt('أدخل عنوان البلاغ الصحي');
+      if (!title) return;
+
+      const location = prompt('أدخل الموقع مثل: جدة حي الشاطئ');
+      if (!location) return;
+
+      const description = prompt('أدخل وصف البلاغ');
+      if (!description) return;
+
+      try {
+        const coords = await getCoordinates(location);
+
+        const payload = {
+          title,
+          type: title,
+          location,
+          description,
+          status: 'pending',
+          priority: 'pending',
+          department: 'health',
+          lat: coords.lat,
+          lng: coords.lng,
+          createdBy: currentUser.id || currentUser.uid,
+          createdByName: currentUserProfile?.fullName || currentUserProfile?.name || currentUser?.fullName || currentUser?.username || 'مستخدم',
+          createdAt: serverTimestamp()
+        };
+
+        const ref = await addDoc(collection(db, 'health_reports'), payload);
+        reportsCache.unshift({ id: ref.id, ...payload });
+        renderReports();
+        updateStats();
+        alert('تمت إضافة البلاغ بنجاح وربطه بالخريطة');
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'تعذر إضافة البلاغ');
+      }
+    }
+
+    function showSimpleReport() {
+      const pendingAppointments = appointmentsCache.filter(item => getStatusInfo(item.status).className.includes('pending')).length;
+      const approvedAppointments = appointmentsCache.filter(item => ['approved', 'accepted', 'مقبول', 'تمت الموافقة'].includes(String(item.status || '').trim().toLowerCase())).length;
+      alert(`إجمالي المواعيد: ${appointmentsCache.length}
+قيد المراجعة: ${pendingAppointments}
+المواعيد المعتمدة: ${approvedAppointments}`);
+    }
+
+    function getNormalizedHealthStatus(report) {
+      const normalized = String(report?.status || report?.priority || '').trim().toLowerCase();
+      if (['resolved', 'completed', 'closed', 'done', 'تم الحل', 'مكتمل'].includes(normalized)) return 'resolved';
+      if (['urgent', 'high', 'عاجل'].includes(normalized)) return 'urgent';
+      return 'pending';
+    }
+
+    function getHealthStatusLabelForExport(report) {
+      const normalized = getNormalizedHealthStatus(report);
+      if (normalized === 'resolved') return 'تم الحل';
+      if (normalized === 'urgent') return 'عاجل';
+      return 'قيد المراجعة';
+    }
+
+    function getHealthReportsByType(type) {
+      if (type === 'all') return reportsCache;
+      return reportsCache.filter(report => getNormalizedHealthStatus(report) === type);
+    }
+
+    function getHealthReportTypeTitle(type) {
+      if (type === 'pending') return 'تقرير البلاغات الصحية قيد المراجعة';
+      if (type === 'urgent') return 'تقرير البلاغات الصحية العاجلة';
+      if (type === 'resolved') return 'تقرير البلاغات الصحية التي تم حلها';
+      return 'تقرير جميع البلاغات الصحية';
+    }
+
+    function updateReportsStatsPreview() {
+      if (!reportsStatsPreviewBody) return;
+
+      const latest = reportsCache.slice(0, 8);
+
+      if (!latest.length) {
+        reportsStatsPreviewBody.innerHTML = `
+          <tr>
+            <td colspan="4" class="empty-box">لا توجد بيانات حالياً</td>
+          </tr>
+        `;
+        return;
+      }
+
+      reportsStatsPreviewBody.innerHTML = latest.map(report => `
+        <tr>
+          <td>${escapeHtml(report.title || report.type || 'بلاغ صحي')}</td>
+          <td>${escapeHtml(report.location || 'غير محدد')}</td>
+          <td>${getHealthStatusLabelForExport(report)}</td>
+          <td>${escapeHtml(formatDate(report.updatedAt || report.createdAt))}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function exportHealthReportsPdf(type) {
+      const reports = getHealthReportsByType(type);
+
+      if (!reports.length) {
+        alert('لا توجد بيانات للتصدير');
+        return;
+      }
+
+      const container = document.getElementById('pdfExportContainer');
+      const title = getHealthReportTypeTitle(type);
+      const now = new Date().toLocaleString('ar-SA');
+      const employeeName = currentUserProfile?.fullName || currentUserProfile?.name || currentUser?.fullName || currentUser?.username || 'موظف الصحة';
+      const total = reports.length;
+      const pendingCount = reports.filter(report => getNormalizedHealthStatus(report) === 'pending').length;
+      const urgentCount = reports.filter(report => getNormalizedHealthStatus(report) === 'urgent').length;
+      const resolvedCount = reports.filter(report => getNormalizedHealthStatus(report) === 'resolved').length;
+
+      container.innerHTML = `
+        <div class="pdf-header">
+          <div>
+            <div class="pdf-title">${title}</div>
+            <div class="pdf-subtitle">
+              قطاع الصحة<br>
+              اسم الموظف: ${escapeHtml(employeeName)}<br>
+              تاريخ التصدير: ${now}
+            </div>
+          </div>
+          <div class="pdf-badge">Smart City Dashboard</div>
+        </div>
+
+        <div class="pdf-summary">
+          <div class="pdf-summary-box">
+            <div class="label">كل البلاغات</div>
+            <div class="value">${total}</div>
+          </div>
+          <div class="pdf-summary-box">
+            <div class="label">قيد المراجعة</div>
+            <div class="value">${pendingCount}</div>
+          </div>
+          <div class="pdf-summary-box">
+            <div class="label">عاجلة</div>
+            <div class="value">${urgentCount}</div>
+          </div>
+          <div class="pdf-summary-box">
+            <div class="label">تم الحل</div>
+            <div class="value">${resolvedCount}</div>
+          </div>
+        </div>
+
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>الرقم</th>
+              <th>عنوان البلاغ</th>
+              <th>الموقع</th>
+              <th>الحالة</th>
+              <th>الوصف</th>
+              <th>تاريخ الإنشاء</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${reports.map((report, index) => `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${escapeHtml(report.title || report.type || 'بلاغ صحي')}</td>
+                <td>${escapeHtml(report.location || 'غير محدد')}</td>
+                <td>${getHealthStatusLabelForExport(report)}</td>
+                <td>${escapeHtml(report.description || 'لا يوجد وصف')}</td>
+                <td>${escapeHtml(formatDate(report.createdAt))}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      try {
+        const canvas = await html2canvas(container, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pageWidth - 10;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = 5;
+
+        pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+        heightLeft -= (pageHeight - 10);
+
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight + 5;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+          heightLeft -= (pageHeight - 10);
+        }
+
+        const fileNameMap = {
+          all: 'health_reports_all.pdf',
+          pending: 'health_reports_pending.pdf',
+          urgent: 'health_reports_urgent.pdf',
+          resolved: 'health_reports_resolved.pdf'
+        };
+
+        pdf.save(fileNameMap[type] || 'health_reports.pdf');
+      } catch (error) {
+        console.error(error);
+        showToast('تعذر تصدير PDF');
+      }
+    }
+
+    function showFacilitiesSummary() {
+      showToast(`عدد المرافق الصحية المسجلة: ${facilitiesCache.length}`);
+    }
+
+    function showPendingSummary() {
+      const pendingAppointments = appointmentsCache.filter(item => getStatusInfo(item.status).className.includes('pending')).length;
+      const pendingReports = reportsCache.filter(item => {
+        const className = getStatusInfo(item.status || item.priority).className;
+        return className.includes('pending') || className.includes('urgent');
+      }).length;
+      showToast(`المواعيد المعلقة: ${pendingAppointments}`);
+    }
+
+    function viewMessage(message) {
+      showToast(message);
+    }
+
+    async function handleLogout() {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        localStorage.removeItem('portalUser');
+        sessionStorage.removeItem('portalUser');
+        localStorage.removeItem('portalPendingAuth');
+        sessionStorage.removeItem('portalPendingAuth');
+        window.location.replace('./Login/login.html');
+      }
+    }
+
+
+    function getAppointmentNormalizedStatus(appointment) {
+      const normalized = String(appointment?.status || 'pending').trim().toLowerCase();
+      if (['approved', 'accepted', 'مقبول', 'تمت الموافقة'].includes(normalized)) return 'approved';
+      if (['rejected', 'declined', 'مرفوض'].includes(normalized)) return 'rejected';
+      return 'pending';
+    }
+
+    function getAppointmentsByExportType(type) {
+      if (type === 'pending') {
+        return appointmentsCache.filter(item => getAppointmentNormalizedStatus(item) === 'pending');
+      }
+
+      if (type === 'approved') {
+        return appointmentsCache.filter(item => getAppointmentNormalizedStatus(item) === 'approved');
+      }
+
+      if (type === 'rejected') {
+        return appointmentsCache.filter(item => getAppointmentNormalizedStatus(item) === 'rejected');
+      }
+
+      return appointmentsCache;
+    }
+
+    function getAppointmentsPdfTitle(type) {
+      if (type === 'pending') return 'تقرير المواعيد الصحية قيد المراجعة';
+      if (type === 'approved') return 'تقرير المواعيد الصحية المعتمدة';
+      if (type === 'rejected') return 'تقرير المواعيد الصحية المرفوضة';
+      return 'تقرير جميع المواعيد الصحية';
+    }
+
+    async function exportAppointmentsPdf(type = 'all') {
+      const appointments = getAppointmentsByExportType(type);
+
+      if (!appointments.length) {
+        showToast('لا توجد مواعيد للتصدير');
+        return;
+      }
+
+      const container = document.getElementById('pdfExportContainer');
+      const title = getAppointmentsPdfTitle(type);
+      const now = new Date().toLocaleString('ar-SA');
+      const employeeName =
+        currentUserProfile?.fullName ||
+        currentUserProfile?.name ||
+        currentUser?.fullName ||
+        currentUser?.username ||
+        'موظف الصحة';
+
+      const total = appointments.length;
+      const pendingCount = appointments.filter(item => getAppointmentNormalizedStatus(item) === 'pending').length;
+      const approvedCount = appointments.filter(item => getAppointmentNormalizedStatus(item) === 'approved').length;
+      const rejectedCount = appointments.filter(item => getAppointmentNormalizedStatus(item) === 'rejected').length;
+
+      container.innerHTML = `
+        <div class="pdf-header">
+          <div>
+            <div class="pdf-title">${escapeHtml(title)}</div>
+            <div class="pdf-subtitle">
+              قسم الصحة - إدارة المواعيد<br>
+              اسم الموظف: ${escapeHtml(employeeName)}<br>
+              تاريخ التصدير: ${escapeHtml(now)}
+            </div>
+          </div>
+          <div class="pdf-badge">Smart City Dashboard</div>
+        </div>
+
+        <div class="pdf-summary">
+          <div class="pdf-summary-box">
+            <div class="label">إجمالي المواعيد</div>
+            <div class="value">${total}</div>
+          </div>
+          <div class="pdf-summary-box">
+            <div class="label">قيد المراجعة</div>
+            <div class="value">${pendingCount}</div>
+          </div>
+          <div class="pdf-summary-box">
+            <div class="label">المعتمدة</div>
+            <div class="value">${approvedCount}</div>
+          </div>
+          <div class="pdf-summary-box">
+            <div class="label">المرفوضة</div>
+            <div class="value">${rejectedCount}</div>
+          </div>
+        </div>
+
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>الرقم</th>
+              <th>اسم المريض</th>
+              <th>المستشفى</th>
+              <th>العيادة</th>
+              <th>التاريخ والوقت</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${appointments.map((appointment, index) => {
+              const patientName = getPatientNameFromAppointment(appointment);
+              const hospitalName = getHospitalNameFromAppointment(appointment);
+              const clinicName = getClinicNameFromAppointment(appointment);
+              const appointmentDate = formatDate(getAppointmentDateRaw(appointment));
+              const appointmentTime = getAppointmentTime(appointment);
+              const statusText = getStatusInfo(appointment.status).text;
+
+              return `
+                <tr>
+                  <td>${index + 1}</td>
+                  <td>${escapeHtml(patientName)}</td>
+                  <td>${escapeHtml(hospitalName)}</td>
+                  <td>${escapeHtml(clinicName)}</td>
+                  <td>${escapeHtml(appointmentDate)} - ${escapeHtml(appointmentTime)}</td>
+                  <td>${escapeHtml(statusText)}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      try {
+        const canvas = await html2canvas(container, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pageWidth - 10;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = 5;
+
+        pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+        heightLeft -= (pageHeight - 10);
+
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight + 5;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+          heightLeft -= (pageHeight - 10);
+        }
+
+        const fileNameMap = {
+          all: 'health_appointments_all.pdf',
+          pending: 'health_appointments_pending.pdf',
+          approved: 'health_appointments_approved.pdf',
+          rejected: 'health_appointments_rejected.pdf'
+        };
+
+        pdf.save(fileNameMap[type] || 'health_appointments_report.pdf');
+      } catch (error) {
+        console.error(error);
+        showToast('تعذر تصدير PDF');
+      }
+    }
+
+    window.addAppointment = addAppointment;
+    window.openAddAppointmentModal = openAddAppointmentModal;
+    window.addReport = addReport;
+    window.approveAppointment = approveAppointment;
+    window.rejectAppointment = rejectAppointment;
+    window.openAppointmentActionModal = openAppointmentActionModal;
+    window.viewMessage = viewMessage;
+    window.showSimpleReport = showSimpleReport;
+    window.exportHealthReportsPdf = exportHealthReportsPdf;
+    window.showFacilitiesSummary = showFacilitiesSummary;
+    window.showPendingSummary = showPendingSummary;
+    window.exportAppointmentsPdf = exportAppointmentsPdf;
+
+
+    closeAppointmentModal?.addEventListener('click', closeAppointmentActionModal);
+    cancelAppointmentModal?.addEventListener('click', closeAppointmentActionModal);
+    appointmentModalOverlay?.addEventListener('click', (event) => {
+      if (event.target === appointmentModalOverlay) closeAppointmentActionModal();
+    });
+
+
+    closeAddAppointmentModal?.addEventListener('click', closeAddAppointmentModalBox);
+    cancelAddAppointmentModal?.addEventListener('click', closeAddAppointmentModalBox);
+    addAppointmentModalOverlay?.addEventListener('click', (event) => {
+      if (event.target === addAppointmentModalOverlay) closeAddAppointmentModalBox();
+    });
+    saveAddAppointmentBtn?.addEventListener('click', saveManualAppointment);
+    [addPatientNameInput, addHospitalNameInput, addClinicNameInput, addAppointmentDateInput, addAppointmentTimeInput].forEach(input => {
+      input?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') saveManualAppointment();
+      });
+    });
+
+    approveAppointmentBtn?.addEventListener('click', () => {
+      if (selectedAppointmentId) approveAppointment(selectedAppointmentId);
+    });
+
+    rejectAppointmentBtn?.addEventListener('click', () => {
+      if (selectedAppointmentId) rejectAppointment(selectedAppointmentId);
+    });
+
+    logoutBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      handleLogout();
+    });
+
+    openMapBtn?.addEventListener('click', (event) => {
+      event.preventDefault();
+      window.location.href = './Health-map.html';
+    });
+
+    
+
+    async function startHealthPage() {
+      const stored = getStoredPortalUser();
+
+      if (!stored || !stored.user || !stored.user.id) {
+        window.location.replace('./Login/login.html');
+        return;
+      }
+
+      currentUser = stored.user;
+      connectionStateEl.textContent = 'جاري تحميل البيانات...';
+      initMiniMap();
+
+      try {
+        currentUserProfile = await fetchUserProfile(stored.user.id);
+        const role = normalizeRole(currentUserProfile.role);
+
+        if (!HEALTH_ROLE_VALUES.includes(role)) {
+          alert('ليس لديك صلاحية الدخول إلى قسم الصحة');
+          window.location.replace('./Login/login.html');
+          return;
+        }
+
+        setUserUI(currentUserProfile);
+        await loadDashboardData();
+        connectionStateEl.textContent = 'متصل الآن';
+
+        
+      } catch (error) {
+        console.error(error);
+        alert(`خطأ في تحميل بيانات المستخدم: ${error.message}`);
+        window.location.replace('./Login/login.html');
+      }
+    }
+
+
+    const todayLabelEl = document.getElementById('todayLabel');
+    if (todayLabelEl) {
+      todayLabelEl.textContent = new Date().toLocaleDateString('ar-SA', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    document.getElementById('appointmentsSearchInput')?.addEventListener('input', renderAppointments);
+    document.getElementById('appointmentsStatusFilter')?.addEventListener('change', renderAppointments);
+    document.getElementById('clearAppointmentsFilters')?.addEventListener('click', () => {
+      const search = document.getElementById('appointmentsSearchInput');
+      const status = document.getElementById('appointmentsStatusFilter');
+      if (search) search.value = '';
+      if (status) status.value = '';
+      renderAppointments();
+    });
+
+    startHealthPage();
+  </script>
+
+<script>
+(function(){
+  const btn = document.querySelector('.mobile-menu-btn');
+  const overlay = document.querySelector('.mobile-overlay');
+  const navLinks = document.querySelectorAll('.sidebar a, .sidebar button, .nav-item');
+
+  function closeMenu(){
+    document.body.classList.remove('menu-open');
+    if(btn) btn.setAttribute('aria-expanded','false');
+  }
+
+  if(btn){
+    btn.addEventListener('click', function(){
+      const opened = document.body.classList.toggle('menu-open');
+      btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
+    });
+  }
+
+  if(overlay){
+    overlay.addEventListener('click', closeMenu);
+  }
+
+  navLinks.forEach(function(item){
+    item.addEventListener('click', function(){
+      if(window.innerWidth <= 900) closeMenu();
+    });
+  });
+})();
+</script>
+</body>
+</html>

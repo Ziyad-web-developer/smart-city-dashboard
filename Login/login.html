@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>البوابة الموحدة | تسجيل الدخول</title>
+
+<link rel="stylesheet" href="login.css">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../responsive.css">
+</head>
+
+<body>
+
+<div class="page">
+
+<!-- تسجيل الدخول -->
+
+<section class="left">
+
+<div class="box">
+
+<div class="brand">
+
+<div class="shield">🛡</div>
+
+<div>
+<b>البوابة</b><br>
+الموحدة
+</div>
+
+</div>
+
+<h1>مرحبًا بك مجددًا</h1>
+
+<p class="desc">
+قم بتسجيل الدخول للوصول إلى لوحة التحكم الخاصة بك، سيتم توجيهك تلقائيًا بناءً على صلاحياتك.
+</p>
+
+<form class="form">
+
+<div class="label">
+اسم المستخدم أو البريد الإلكتروني
+</div>
+
+<div class="input">
+<input type="text" placeholder="example@domain.gov">
+</div>
+
+<div class="label">
+كلمة المرور
+</div>
+
+<div class="input password-field">
+
+    <input id="password" type="password" placeholder="********">
+    
+    <span class="eye" onclick="togglePassword()">
+    
+    <svg id="eyeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2">
+    
+    <path d="M17.94 17.94A10.94 10.94 0 0112 20C5 20 1 12 1 12a21.8 21.8 0 015.06-6.94"/>
+    <line x1="1" y1="1" x2="23" y2="23"/>
+    
+    </svg>
+    
+    </span>
+    
+    </div>
+    <a class="forgot" href="./forgot.html">نسيت كلمة المرور؟</a>
+    <div class="row">
+<label>
+<input type="checkbox">
+حفظ بيانات تسجيل الدخول
+</label>
+</div>
+
+<button>
+    تسجيل الدخول 
+    <div class="arrow-wrapper">
+        <div class="arrow"></div>
+
+    </div>
+</button>
+
+</form>
+<div class="demo-box">
+    <h4>حسابات الدخول التجريبية</h4>
+  
+    <div class="demo-grid">
+      <div class="demo-account">
+        <b>الحساب البلدي</b>
+        <span>balady@gmail.com</span>
+        <small>123456</small>
+      </div>
+  
+      <div class="demo-account">
+        <b>الحساب الصحي</b>
+        <span>health@gmail.com</span>
+        <small>123456</small>
+      </div>
+  
+      <div class="demo-account">
+        <b>حساب المطور</b>
+        <span>ziyad@gmail.com</span>
+        <small>123456</small>
+      </div>
+    </div>
+  
+    <p>هذه الحسابات مخصصة لاستعراض المشروع فقط.</p>
+  </div>
+
+<div class="info">
+<b>كشف ذكي للقطاعات</b>
+<br>
+يقوم النظام تلقائيًا بتحديد واجهة المستخدم الخاصة بك (البلدية أو الصحية) بناءً على مستوى صلاحيات حسابك الوظيفي.
+</div>
+
+<div class="footer">
+
+<a href="../contact.html">تواصل معنا</a>
+</div>
+
+
+
+</div>
+
+</section>
+
+<!-- القسم الأخضر -->
+
+<section class="right">
+
+<div class="hero">
+
+<h2>
+المنصة الموحدة لإدارة الخدمات
+</h2>
+
+<p>
+نظام متكامل يجمع بين الرقابة البلدية والخدمات الصحية لتعزيز جودة الحياة في المملكة.
+</p>
+
+<div class="chips">
+
+<div class="chip">
+القطاع البلدي
+</div>
+
+<div class="chip">
+القطاع الصحي
+</div>
+
+</div>
+
+</div>
+<div class="copyright">
+    جميع الحقوق محفوظة © 2026 - البوابة الموحدة
+    </div>
+</section>
+
+</div>
+
+<script>
+
+function togglePassword(){
+
+const password =
+document.getElementById("password");
+
+if(password.type === "password"){
+password.type = "text";
+}else{
+password.type = "password";
+}
+
+}
+
+</script>
+
+<script type="module" src="login.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>استعادة كلمة المرور</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Tajawal';
+}
+
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  background:#eef3f1;
+}
+
+.box{
+  background:#fff;
+  padding:30px;
+  border-radius:15px;
+  width:320px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+h2{
+  margin-bottom:15px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+
+button{
+  background:#118a43;
+  color:#fff;
+  padding:10px;
+  width:100%;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#0d6f36;
+}
+
+.msg{
+  margin-top:10px;
+  font-size:13px;
+}
+
+.back{
+  margin-top:15px;
+  display:block;
+  color:#0d6f36;
+  text-decoration:none;
+}
+</style>
+
+  <link rel="stylesheet" href="../responsive.css">
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>استعادة كلمة المرور</h2>
+
+<input type="email" id="email" placeholder="أدخل بريدك الإلكتروني">
+
+<button onclick="resetPassword()">إرسال الرابط</button>
+
+<div id="msg" class="msg"></div>
+
+<a href="./login.html" class="back">العودة لتسجيل الدخول</a>
+
+</div>
+
+<script type="module">
+
+import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { auth } from "./api.js"; // 👈 هذا المهم
+
+window.resetPassword = function(){
+
+  const email = document.getElementById("email").value;
+  const msg = document.getElementById("msg");
+
+  if(!email){
+    msg.innerText = "أدخل البريد الإلكتروني";
+    msg.style.color = "red";
+    return;
+  }
+
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      msg.innerText = "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك";
+      msg.style.color = "green";
+    })
+    .catch((error) => {
+      msg.innerText = "خطأ: " + error.message;
+      msg.style.color = "red";
+    });
+
+}
+
+</script>
+
+</body>
+</html>

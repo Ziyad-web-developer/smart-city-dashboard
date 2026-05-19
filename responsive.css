@@ -1,0 +1,361 @@
+/* Global responsive layer */
+
+html,
+body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+img,
+svg,
+video,
+canvas{
+  max-width:100%;
+}
+
+.mobile-menu-btn,
+.mobile-overlay{
+  display:none;
+}
+
+.table-wrap,
+.table-wrapper,
+.report-preview{
+  max-width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+@media (max-width:1200px){
+  .hero,
+  .content-grid,
+  .admin-grid,
+  .reports-layout,
+  .map-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .stats-grid,
+  .cards,
+  .services-grid,
+  .report-stats-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+
+@media (max-width:900px){
+  body{
+    background:#f3f6f5;
+  }
+
+  .layout{
+    display:block !important;
+    grid-template-columns:1fr !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    overflow-x:hidden !important;
+  }
+
+  .main,
+  main,
+  .page-container,
+  .container,
+  .content,
+  .wrapper{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:18px 14px 28px !important;
+    overflow-x:hidden !important;
+  }
+
+  .sidebar{
+    position:fixed !important;
+    top:0 !important;
+    right:0 !important;
+    left:auto !important;
+    width:min(82vw,320px) !important;
+    max-width:320px !important;
+    height:100dvh !important;
+    min-height:100dvh !important;
+    z-index:2000 !important;
+    transform:translateX(105%) !important;
+    transition:transform .25s ease !important;
+    border-radius:0 0 0 28px !important;
+    overflow-y:auto !important;
+    box-shadow:-18px 0 42px rgba(15,23,42,.18) !important;
+  }
+
+  body.menu-open .sidebar{
+    transform:translateX(0) !important;
+  }
+
+  .mobile-overlay{
+    display:block;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.38);
+    backdrop-filter:blur(2px);
+    z-index:1900;
+    opacity:0;
+    pointer-events:none;
+    transition:.2s ease;
+  }
+
+  body.menu-open .mobile-overlay{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  .mobile-menu-btn{
+    display:flex !important;
+    position:sticky;
+    top:10px;
+    margin:10px 14px 0 auto;
+    z-index:1800;
+    width:48px;
+    height:48px;
+    border:0;
+    border-radius:16px;
+    align-items:center;
+    justify-content:center;
+    background:#118a43;
+    color:#fff;
+    box-shadow:0 10px 24px rgba(17,138,67,.22);
+    font-size:24px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  .mobile-menu-btn span{
+    display:block;
+    line-height:1;
+    transform:translateY(-1px);
+  }
+
+  .topbar,
+  .top-row,
+  .report-actions,
+  .filters,
+  .topbar-actions,
+  .action-row{
+    width:100% !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:10px !important;
+  }
+
+  .hero,
+  .content-grid,
+  .admin-grid,
+  .services-grid,
+  .report-actions-card,
+  .profile-grid,
+  .report-stats-grid,
+  .stats-grid,
+  .cards,
+  .grid,
+  .appointments-grid,
+  .map-grid{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    width:100% !important;
+    gap:14px !important;
+  }
+
+  .panel,
+  .card,
+  .stat-card,
+  .hero-main,
+  .hero-side,
+  .table-wrap,
+  .user-card,
+  .welcome-card,
+  .action-card{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    border-radius:22px !important;
+  }
+
+  h1,
+  .topbar-left h1,
+  .hero-title,
+  .section-title{
+    font-size:clamp(26px,8vw,38px) !important;
+    line-height:1.25 !important;
+  }
+
+  h2,
+  .brand h2,
+  .brand-text h1{
+    font-size:clamp(20px,6vw,28px) !important;
+  }
+
+  p,
+  .desc{
+    line-height:1.8 !important;
+  }
+
+  input,
+  select,
+  textarea,
+  button,
+  .btn,
+  .top-pill,
+  .date-pill,
+  .section-pill{
+    max-width:100% !important;
+  }
+
+  .btn,
+  button:not(.mobile-menu-btn):not(.table-action){
+    min-height:46px;
+  }
+
+  table,
+  .reports-table,
+  .pdf-table{
+    min-width:720px !important;
+  }
+
+  .table-wrap,
+  .table-wrapper,
+  .report-preview{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+
+  .page{
+    display:block !important;
+    width:100% !important;
+    min-height:100dvh !important;
+  }
+
+  .page .right,
+  .right{
+    display:none !important;
+  }
+
+  .page .left,
+  .left{
+    width:100% !important;
+    min-height:100dvh !important;
+    padding:28px 18px !important;
+  }
+
+  .box{
+    width:100% !important;
+    max-width:520px !important;
+  }
+}
+
+@media (max-width:640px){
+  .main,
+  main,
+  .page-container,
+  .container,
+  .content,
+  .wrapper{
+    padding:14px 12px 24px !important;
+  }
+
+  .stats-grid,
+  .cards,
+  .services-grid,
+  .report-stats-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .panel,
+  .card,
+  .stat-card,
+  .hero-main,
+  .hero-side,
+  .table-wrap,
+  .user-card,
+  .welcome-card,
+  .action-card{
+    padding:18px !important;
+  }
+
+  .brand,
+  .topbar,
+  .top-row{
+    text-align:right !important;
+  }
+
+  .sidebar{
+    width:min(88vw,320px) !important;
+  }
+
+  .mobile-menu-btn{
+    width:46px;
+    height:46px;
+    border-radius:15px;
+  }
+  /* ================= MOBILE MENU ================= */
+
+.mobile-menu{
+  display:none;
+}
+
+.overlay{
+  display:none;
+}
+
+@media (max-width:900px){
+
+  .mobile-menu{
+    display:flex;
+    position:fixed;
+    top:20px;
+    right:20px;
+    width:58px;
+    height:58px;
+    border:none;
+    border-radius:18px;
+    background:#16a34a;
+    color:#fff;
+    font-size:28px;
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+  }
+
+  .sidebar{
+    position:fixed !important;
+    top:0;
+    right:-320px;
+    width:280px !important;
+    height:100vh;
+    z-index:9998;
+    transition:.3s;
+    overflow-y:auto;
+  }
+
+  .sidebar.active{
+    right:0;
+  }
+
+  .overlay.show{
+    display:block;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:9997;
+  }
+
+  body{
+    overflow-x:hidden;
+  }
+
+}
+}
